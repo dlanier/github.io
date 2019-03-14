@@ -13166,9 +13166,113 @@ docker <span class="nb">exec</span> -it mymaker maker -version
 <span class="c1"># etc if you know maker</span>
 docker <span class="nb">exec</span> -it mymaker perl --version
 </pre></div>
+<h2 id="UCSC-Genome-Browser-&amp;&amp;-db-containers:">UCSC Genome Browser &amp;&amp; db containers:<a class="anchor-link" href="#UCSC-Genome-Browser-&amp;&amp;-db-containers:">&#182;</a></h2><p><a href="http://genome.ucsc.edu/">UCSC Genome Browser</a> <br>
+<a href="https://github.com/icebert/docker_ucsc_genome_browser">UCSC Genome Browser Dockerfile</a> <br>
+<a href="https://github.com/icebert/docker_ucsc_genome_browser_db">MySQL db Dockerfile for UCSC G.B.</a> <br></p>
+<hr>
+<p><a href="https://hub.docker.com/r/icebert/ucsc_genome_browser/">UCSC Genome Browser &amp; MySQL DB on Docker registry</a> <br></p>
+<div class="highlight"><pre><span></span><span class="c1"># start MySQL </span>
+docker run -d --name gbdb -p <span class="m">3338</span>:3306 icebert/ucsc_genome_browser_db
+<span class="c1"># &amp; link to GenomeBrowser</span>
+docker run -d --link gbdb:gbdb -p <span class="m">8038</span>:80 icebert/ucsc_genome_browser
+</pre></div>
+<hr>
+<h3 id="papers">papers<a class="anchor-link" href="#papers">&#182;</a></h3><p><a href="https://www.ncbi.nlm.nih.gov/pubmed/18025269">MAKER: easy-to-use pdf</a> <br>
+<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4286374/">Genome Annotation useing Maker</a> <br></p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
