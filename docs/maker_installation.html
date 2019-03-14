@@ -13158,6 +13158,14 @@ OR mo betta OPTION <br>
 <hr>
 <p><a href="https://bio.tools/maker">bio tools maker</a> <br>
 <a href="http://www.mybiosoftware.com/maker-2-20120116-genome-annotation-pipeline.html">mybiosoftware.com maker pipeline</a> <br></p>
+<h1 id="Docker-way-out:">Docker way out:<a class="anchor-link" href="#Docker-way-out:">&#182;</a></h1><div class="highlight"><pre><span></span>docker pull quay.io/biocontainers/maker:2.31.10--pl526_11
+</pre></div>
+<h2 id="Or">Or<a class="anchor-link" href="#Or">&#182;</a></h2><div class="highlight"><pre><span></span>docker create --name<span class="o">=</span>mymaker -v <span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>:/home/temp_usr/run_dir -it quay.io/biocontainers/maker:2.31.10--pl526_11
+docker start mymaker
+docker <span class="nb">exec</span> -it mymaker maker -version
+<span class="c1"># etc if you know maker</span>
+docker <span class="nb">exec</span> -it mymaker perl --version
+</pre></div>
 
 </div>
 </div>
