@@ -13434,15 +13434,37 @@ s_CA00084746:
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">file_handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
         
-    <span class="n">SHOW_LINES_N</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">SHOW_LINES_N</span> <span class="o">=</span> <span class="mi">12</span>
     <span class="n">line_num</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">line_num</span> <span class="o">&lt;=</span> <span class="n">SHOW_LINES_N</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;SampleNameNormal&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">start_mark</span> <span class="o">=</span> <span class="n">line_num</span> <span class="o">-</span> <span class="n">SHOW_LINES_N</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="n">stop_mark</span> <span class="o">=</span> <span class="n">line_num</span> <span class="o">+</span> <span class="n">SHOW_LINES_N</span> <span class="o">//</span> <span class="mi">2</span>
+<span class="c1">#             print(&#39;SampleNameNormal at %i&#39;%sec2_mark)</span>
         <span class="n">line_num</span> <span class="o">+=</span> <span class="mi">1</span>
     
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Showing </span><span class="si">%i</span><span class="s1"> lines of </span><span class="si">%i</span><span class="s1"> lines in </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">SHOW_LINES_N</span><span class="p">,</span> <span class="n">line_num</span><span class="p">,</span> <span class="n">out_file_name</span><span class="p">))</span>
+    <span class="n">total_number_of_lines</span> <span class="o">=</span> <span class="n">line_num</span>
+<span class="c1">#     print(&#39;\n\t\t...\n&#39;)</span>
+ 
+    <span class="n">line_num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line_num</span> <span class="o">==</span> <span class="n">start_mark</span> <span class="ow">or</span> <span class="n">line_num</span> <span class="o">==</span> <span class="n">stop_mark</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">...</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1">#             if line_num == stop_mark:</span>
+<span class="c1">#                 print(&#39;\t\t...\n&#39;)</span>
+        <span class="k">if</span> <span class="n">line_num</span> <span class="o">&gt;</span> <span class="n">start_mark</span> <span class="ow">and</span> <span class="n">line_num</span> <span class="o">&lt;</span> <span class="n">stop_mark</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                
+        <span class="k">if</span> <span class="n">line_num</span> <span class="o">&gt;</span> <span class="n">total_number_of_lines</span> <span class="o">-</span> <span class="n">SHOW_LINES_N</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            
+        <span class="n">line_num</span> <span class="o">+=</span> <span class="mi">1</span>
     
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">first, last, middle </span><span class="si">%i</span><span class="s1"> lines of </span><span class="si">%i</span><span class="s1"> lines in </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">SHOW_LINES_N</span><span class="p">,</span> 
+                                                                  <span class="n">total_number_of_lines</span><span class="p">,</span> 
+                                                                  <span class="n">out_file_name</span><span class="p">))</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOT Right - write file failed ?&#39;</span><span class="p">)</span>
 </pre></div>
@@ -13474,9 +13496,39 @@ s_CA00084746:
             &#34;CA00084743.FCHVJLTBBXX_L1_R2_IATAGAGGC-GTAGAGAT.trimmed.fastq.gz&#34;
         ],
         [
+            &#34;CA00084744.FCHVJLTBBXX_L1_R1_IATAGAGGC-GGTAGCAT.trimmed.fastq.gz&#34;,
+            &#34;CA00084744.FCHVJLTBBXX_L1_R2_IATAGAGGC-GGTAGCAT.trimmed.fastq.gz&#34;
+
+...
+
+        [
+            &#34;CA00085605.FCHVJLTBBXX_L1_R1_IACTGCATA-TCGGCATA.trimmed.fastq.gz&#34;,
+            &#34;CA00085605.FCHVJLTBBXX_L1_R2_IACTGCATA-TCGGCATA.trimmed.fastq.gz&#34;
+        ]
+    ],
+    &#34;SampleNameNormal&#34;: [
+        &#34;s_CA00084742&#34;,
+        &#34;s_CA00084743&#34;,
+        &#34;s_CA00084744&#34;,
+        &#34;s_CA00084745&#34;,
+        &#34;s_CA00084746&#34;,
+
+...
+
+        &#34;s_CA00085597&#34;,
+        &#34;s_CA00085598&#34;,
+        &#34;s_CA00085599&#34;,
+        &#34;s_CA00085600&#34;,
+        &#34;s_CA00085601&#34;,
+        &#34;s_CA00085602&#34;,
+        &#34;s_CA00085603&#34;,
+        &#34;s_CA00085604&#34;,
+        &#34;s_CA00085605&#34;
+    ]
+}
 
 
-Showing 10 lines of 3836 lines in ../data/data/multi_sample.json
+first, last, middle 12 lines of 3836 lines in ../data/data/multi_sample.json
 
 </pre>
 </div>
