@@ -13168,24 +13168,6 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Overwriting ../data/data/test_config.txt
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13441,7 +13423,15 @@ div#notebook {
 <span class="k">def</span> <span class="nf">config_dict_to_dotty_size_sorted_keys_list</span><span class="p">(</span><span class="n">config_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; size_sorted_keys_list = config_dict_to_dotty_size_sorted_keys_list(conf_dict) </span>
 <span class="sd">    Args:</span>
+<span class="sd">        config_dict:            python dictionary with Camel_Case_Dotty_Name keys:</span>
+<span class="sd">                                bqsr.SentieonThreads</span>
+<span class="sd">                                etcetera</span>
+<span class="sd">                                SomeTask.vcf_index.SentieonThreads</span>
 <span class="sd">    Returns:</span>
+<span class="sd">        size_sorted_keys_list:  keys in config_dict.keys() sorted by number of segments (largest first)</span>
+<span class="sd">                                SomeTask.vcf_index.SentieonThreads</span>
+<span class="sd">                                bqsr.SentieonThreads</span>
+<span class="sd">                                etcetera</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">keys_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -13463,9 +13453,13 @@ div#notebook {
 <span class="k">def</span> <span class="nf">get_config_keys_dict_lists_of_json_template_keys</span><span class="p">(</span><span class="n">template_dict</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; keys_dict = get_config_keys_dict_lists_of_json_template_keys(template_dict, config_dict)</span>
 <span class="sd">    Args:</span>
+<span class="sd">        template_dict:  Womtool template output as python dict</span>
+<span class="sd">        config_dict:    configuration files merged into python dict</span>
+<span class="sd">        </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        keys_dict:  python dict with config_dict keys where values are lists of partial-key matches</span>
-<span class="sd">                    from template dict</span>
+<span class="sd">        keys_dict:      python dict with config_dict keys where values are lists of partial-key matches</span>
+<span class="sd">                        from template dict</span>
+<span class="sd">                        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">keys_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">config_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
     <span class="n">size_sorted_keys_list</span> <span class="o">=</span> <span class="n">config_dict_to_dotty_size_sorted_keys_list</span><span class="p">(</span><span class="n">config_dict</span><span class="p">)</span>
@@ -13490,8 +13484,10 @@ div#notebook {
 <span class="sd">    Args:</span>
 <span class="sd">        data_dict:          python dict - values for all partial-key-match template locations</span>
 <span class="sd">        template_dict:      python dict - values will be ignored herin</span>
+<span class="sd">        </span>
 <span class="sd">    Returns:</span>
 <span class="sd">        filled_in_dict:     keys not found in data_dict return as None</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">data_keys_dict</span> <span class="o">=</span> <span class="n">get_config_keys_dict_lists_of_json_template_keys</span><span class="p">(</span><span class="n">template_dict</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">)</span>
 
@@ -13527,12 +13523,13 @@ div#notebook {
     
     <span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">insert_dict_in_json_template</span><span class="p">(</span><span class="n">all_config_dicts</span><span class="p">,</span> <span class="n">template_dict</span><span class="p">)</span>
     
-    <span class="c1"># check keys:</span>
+    <span class="c1"># check keys:                                          # Crash policy HERE -- or with Caller ?</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">filled_in_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;key </span><span class="si">%s</span><span class="s1"> missing value:&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">filled_in_dict</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
             
     <span class="k">return</span> <span class="n">filled_in_dict</span>
+
 
 <span class="c1">#                            Run All - uses all functions with the above written test data - - - run-for-all-test</span>
 <span class="n">data_data</span> <span class="o">=</span> <span class="s1">&#39;../data/data&#39;</span>
@@ -13636,7 +13633,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/config_test.json
@@ -13673,7 +13670,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">)</span>
@@ -13699,25 +13696,21 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Duplicate Keys found in ../data/data/config_test.json
+Duplicate Keys found in ../data/data/test_config.txt
 data_key - partial key not found in template - data_key.DNE
-key GermlineMasterWF.AlignmentMetrics.SentieonThreads missing value: None
-key GermlineMasterWF.haplotype.SentieonThreads missing value: None
-key GermlineMasterWF.merge.SentieonThreads missing value: None
-key GermlineMasterWF.realign.SentieonThreads missing value: None
-key GermlineMasterWF.vqsr.SentieonThreads missing value: None
 
 Result of Algorithm == json file == local_args_dict_to_filledin_json
 
- 1          &#34;GermlineMasterWF.AlignmentMetrics.SentieonThreads&#34;: &#34;None&#34;
+ 1          &#34;GermlineMasterWF.AlignmentMetrics.SentieonThreads&#34;: &#34;32&#34;
  2        &#34;GermlineMasterWF.align.ALIGN_paired.SentieonThreads&#34;: &#34;2&#34;
  3        &#34;GermlineMasterWF.align.ALIGN_single.SentieonThreads&#34;: &#34;3&#34;
  4                      &#34;GermlineMasterWF.bqsr.SentieonThreads&#34;: &#34;4&#34;
  5                     &#34;GermlineMasterWF.dedup.SentieonThreads&#34;: &#34;1&#34;
- 6                 &#34;GermlineMasterWF.haplotype.SentieonThreads&#34;: &#34;None&#34;
- 7                     &#34;GermlineMasterWF.merge.SentieonThreads&#34;: &#34;None&#34;
- 8                   &#34;GermlineMasterWF.realign.SentieonThreads&#34;: &#34;None&#34;
+ 6                 &#34;GermlineMasterWF.haplotype.SentieonThreads&#34;: &#34;32&#34;
+ 7                     &#34;GermlineMasterWF.merge.SentieonThreads&#34;: &#34;32&#34;
+ 8                   &#34;GermlineMasterWF.realign.SentieonThreads&#34;: &#34;32&#34;
  9                 &#34;GermlineMasterWF.vcf_index.SentieonThreads&#34;: &#34;5&#34;
-10                      &#34;GermlineMasterWF.vqsr.SentieonThreads&#34;: &#34;None&#34;
+10                      &#34;GermlineMasterWF.vqsr.SentieonThreads&#34;: &#34;32&#34;
 </pre>
 </div>
 </div>
@@ -13853,32 +13846,6 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
 
