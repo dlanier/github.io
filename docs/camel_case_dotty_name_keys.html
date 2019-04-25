@@ -13120,6 +13120,10 @@ div#notebook {
 <a href="#missing_n_duplicate_key_test">missing and duplicate keys test</a> <br>
 <a href="duplicate_json_input_keys_test">duplicate json input keys test</a> <br></p>
 <hr>
+<p><a href="#iforge_test_header">Iforge Test Runs</a> <br>
+<a href="#MultiTumor_wdl">MultiTumor.wdl </a> <br>
+<a href="#GermlineMasterWorkflow_wdl">GermlineMasterWorkflow.wdl </a> <br></p>
+<hr>
 <h1 id="Camel-Case-Dotty-Name-indexing-from-config-text-file-to-filled-in-json">Camel Case Dotty Name indexing from config text file to filled in json<a class="anchor-link" href="#Camel-Case-Dotty-Name-indexing-from-config-text-file-to-filled-in-json">&#182;</a></h1><h3 id="Note-that-types-must-be-compatible-(same)">Note that types must be compatible (same)<a class="anchor-link" href="#Note-that-types-must-be-compatible-(same)">&#182;</a></h3><div class="highlight"><pre><span></span><span class="n">Current</span> <span class="n">behavior</span> <span class="o">--</span>
 
 <span class="n">Input</span> <span class="n">config</span> <span class="nb">file</span><span class="p">:</span>
@@ -13164,7 +13168,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
@@ -13181,7 +13185,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[13]:</div>
+    <div class="prompt output_prompt">Out[1]:</div>
 
 
 
@@ -13198,7 +13202,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/test_config.txt
@@ -13233,7 +13237,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/config_test.json
@@ -13268,7 +13272,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/test_template.json
@@ -13320,7 +13324,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Complete and tested with all features - replacement for config_json_parser.py module part -- ToDo NamesGame</span>
@@ -13640,7 +13644,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#                            Run All - uses all functions with the above written test data - - - run-for-all-test</span>
@@ -13711,7 +13715,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/test_config.txt
@@ -13747,7 +13751,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/config_test.json
@@ -13784,7 +13788,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_dict_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">)</span>
@@ -13844,7 +13848,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/test_config.txt
@@ -13878,7 +13882,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/config_test.json
@@ -13914,7 +13918,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_dict_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">)</span>
@@ -13965,6 +13969,155 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="iforge_test_header"></a></p>
+<h1 id="Testing-On-iforge:-April-25,-2019---two-workflows-tested">Testing On iforge: April 25, 2019 - two workflows tested<a class="anchor-link" href="#Testing-On-iforge:-April-25,-2019---two-workflows-tested">&#182;</a></h1><p><a href="https://git.ncsa.illinois.edu/mayomics/MayomicsVC/blob/dev_json_config/src/wdl/SomaticVC/MultiTumor.wdl">MultiTumor.wdl</a> <br></p>
+<p><a href="https://git.ncsa.illinois.edu/mayomics/MayomicsVC/blob/dev_json_config/src/wdl/GermlineMasterWorkflow.wdl">GermlineMasterWorkflow.wdl</a> <br></p>
+<h2 id="Both-produced-complete-workflow.fillein.json-files-with-the-noted-validator-warnings.">Both produced complete workflow.fillein.json files with the noted validator warnings.<a class="anchor-link" href="#Both-produced-complete-workflow.fillein.json-files-with-the-noted-validator-warnings.">&#182;</a></h2><hr>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="MultiTumor_wdl"></a>
+<a href="#top">Top</a> <br></p>
+<div class="highlight"><pre><span></span><span class="c1"># test directory:</span>
+<span class="c1"># /projects/bioinformatics/DEL/zzTestSomatic</span>
+<span class="c1"># code branch dev_json_config</span>
+</pre></div>
+<h3 id="test-script-make_json.sh">test script <em>make_json.sh</em><a class="anchor-link" href="#test-script-make_json.sh">&#182;</a></h3><div class="highlight"><pre><span></span>#!/bin/bash
+
+# bash make_json.sh . MayomicsVC/src/wdl/SomaticVC/MultiTumor.wdl &quot;-i Config/run_info.txt -i Config/tool_info.txt -i Config/memory_info.txt -i Config/sample_info.json&quot;
+
+set -x
+set -o errexit
+set -o pipefail
+set -o nounset
+
+#       path to test folder (run directory)
+TestingMayomics=$1
+
+#       workflow is being tested: a .wdl file
+WorkflowBeingTested=$2;
+BaseNameOfWorkflowBeingTested=`basename ${WorkflowBeingTested} .wdl`
+
+#       config files to use like this: &quot;-i /full/path/to/config1.txt -i /full/path/to/config2.txt etc...&quot;
+ConfigsBeingUsed=$3;
+
+if [[ &quot;$(ls -A ./Delivery)&quot; ]]; then
+    rm -r ./Delivery/*
+fi
+
+cd ${TestingMayomics};
+
+source /etc/profile.d/modules.sh
+module load /usr/local/apps/bioapps/modules/cromwell/cromwell-34;
+module load python/python-3.6.1;
+
+#       create JSON template
+java -jar ${WOMTOOL} inputs ${WorkflowBeingTested} &gt; Jsons/${BaseNameOfWorkflowBeingTested}.template.json;
+
+#populate the JSON template
+python MayomicsVC/src/python/config_json_parser.py ${ConfigsBeingUsed} --jsonTemplate Jsons/${BaseNameOfWorkflowBeingTested}.template.json -o Jsons/${BaseNameOfWorkflowBeingTested}.FilledIn.json;
+
+#validate the JSON template
+python MayomicsVC/src/python/key_validator.py -i Jsons/${BaseNameOfWorkflowBeingTested}.FilledIn.json --KeyTypeFile MayomicsVC/key_types.json;
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="validator-response:">validator response:<a class="anchor-link" href="#validator-response:">&#182;</a></h3><div class="highlight"><pre><span></span>+ python MayomicsVC/src/python/key_validator.py -i Jsons/MultiTumor.FilledIn.json --KeyTypeFile MayomicsVC/key_types.json
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;BcftoolsExtraOptionsString&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;FixDPScript&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;IndelGtFixScript&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;MantaEnvProfile&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;PanelNormalsIdx&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunBqsr&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunManta&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunMutect&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunStrelka&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;SampleNameTumorArray&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;SnpGtFixScript&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;TumorOnly&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> Key validation finished successfully with <span class="m">12</span> warning<span class="o">(</span>s<span class="o">)</span> issued
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="GermlineMasterWorkflow_wdl"></a>
+<a href="#top">Top</a> <br></p>
+<div class="highlight"><pre><span></span><span class="c1"># test directory:</span>
+<span class="c1"># /projects/bioinformatics/DEL/zzTestGermline  </span>
+<span class="c1"># code branch dev_json_config</span>
+</pre></div>
+<h3 id="test-script-germline_mkjson.sh">test script <em>germline_mkjson.sh</em><a class="anchor-link" href="#test-script-germline_mkjson.sh">&#182;</a></h3><div class="highlight"><pre><span></span>#!/bin/bash
+
+#bash germline_mkjson.sh . MayomicsVC/src/wdl/GermlineMasterWorkflow.wdl &quot;-i Config/sample_info.json -i Config/tool_info.txt -i Config/run_info.txt -i Config/memory_info.txt&quot;
+
+set -x
+set -o errexit
+set -o pipefail
+set -o nounset
+
+#Define the path to test folder
+TestingMayomics=$1
+
+#define which stage of the workflow is being tested: is a .wdl file
+WorkflowBeingTested=$2;
+BaseNameOfWorkflowBeingTested=`basename \${WorkflowBeingTested} .wdl`
+
+#define which config files to use in this test
+ConfigsBeingUsed=$3;
+
+if [[ &quot;$(ls -A ./Delivery)&quot; ]]; then
+    rm -r ./Delivery/*
+fi
+
+cd ${TestingMayomics};
+
+source /etc/profile.d/modules.sh
+module load /usr/local/apps/bioapps/modules/cromwell/cromwell-34;
+module load python/python-3.6.1;
+
+# create JSON template
+#cd &quot;./MayomicsVC/&quot;; 
+java -jar ${WOMTOOL} inputs ${WorkflowBeingTested} &gt; Jsons/${BaseNameOfWorkflowBeingTested}.template.json;
+#cd ../;
+
+#populate the JSON template
+python MayomicsVC/src/python/config_json_parser.py ${ConfigsBeingUsed} --jsonTemplate Jsons/${BaseNameOfWorkflowBeingTested}.template.json -o Jsons/\${BaseNameOfWorkflowBeingTested}.FilledIn.json;
+
+#validate the JSON template
+python MayomicsVC/src/python/key_validator.py -i Jsons/${BaseNameOfWorkflowBeingTested}.FilledIn.json --KeyTypeFile MayomicsVC/key_types.json;
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="validator-response:">validator response:<a class="anchor-link" href="#validator-response:">&#182;</a></h3><div class="highlight"><pre><span></span>+ python MayomicsVC/src/python/key_validator.py -i Jsons/GermlineMasterWorkflow.FilledIn.json --KeyTypeFile MayomicsVC/key_types.json
+<span class="o">[</span>2019-04-25T16:08:55-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;HaplotyperVCFSourceField&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:08:55-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunBqsr&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-04-25T16:08:55-0500<span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> Key validation finished successfully with <span class="m">2</span> warning<span class="o">(</span>s<span class="o">)</span> issued
+</pre></div>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
