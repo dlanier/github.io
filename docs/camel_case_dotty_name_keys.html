@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>camel_case_dotty_name_access_II</title>
+<title>camel_case_dotty_name_keys</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13164,7 +13164,41 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;../../../src/python/&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[13]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/test_config.txt
@@ -13199,7 +13233,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/config_test.json
@@ -13234,7 +13268,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/test_template.json
@@ -13286,7 +13320,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Complete and tested with all features - replacement for config_json_parser.py module part -- ToDo NamesGame</span>
@@ -13296,6 +13330,7 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 
 <span class="k">def</span> <span class="nf">key_duplicates_exist</span><span class="p">(</span><span class="n">dict_1</span><span class="p">,</span> <span class="n">dict_2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; True_or_False = key_duplicates_exist(dict_1, dict_2) </span>
@@ -13516,6 +13551,37 @@ div#notebook {
 
     <span class="k">return</span> <span class="n">keys_dict</span>
 
+
+<span class="k">def</span> <span class="nf">insert_data_dict_in_filled_in_dict</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">filled_in_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; filled_in_dict = insert_data_dict_in_filled_in_dict(data_dict, filled_in_dict)</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        data_dict:          python dict of key-value pairs s.t. values are valid data and keys are</span>
+<span class="sd">                            camel case dotty names found as right-to-left partial keys in filled_in_dict</span>
+<span class="sd">                            </span>
+<span class="sd">        filled_in_dict:     python dict of key-value pairs where keys are valid wdl names</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        filled_in_dict:     python dict with data_dict keys inserted in filled in dict locations if they exist</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data_keys_dict</span> <span class="o">=</span> <span class="n">get_config_keys_dict_lists_of_json_template_keys</span><span class="p">(</span><span class="n">filled_in_dict</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">data_key</span><span class="p">,</span> <span class="n">data_value</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        
+        <span class="k">if</span> <span class="n">data_key</span> <span class="ow">in</span> <span class="n">data_keys_dict</span><span class="p">:</span>
+            
+            <span class="k">if</span> <span class="n">data_keys_dict</span><span class="p">[</span><span class="n">data_key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;data_key - partial key not found in template -&#39;</span><span class="p">,</span> <span class="n">data_key</span><span class="p">)</span>
+                <span class="k">pass</span>
+            
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">data_key_list_member</span> <span class="ow">in</span> <span class="n">data_keys_dict</span><span class="p">[</span><span class="n">data_key</span><span class="p">]:</span>
+                    <span class="n">filled_in_dict</span><span class="p">[</span><span class="n">data_key_list_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_value</span>
+
+    <span class="k">return</span> <span class="n">filled_in_dict</span>
+
+
 <span class="k">def</span> <span class="nf">insert_dict_in_json_template</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">template_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; return filled_in_dict = insert_dict_in_json_template(data_dict, template_dict) </span>
 <span class="sd">    Args:</span>
@@ -13526,23 +13592,13 @@ div#notebook {
 <span class="sd">        filled_in_dict:     keys not found in data_dict return as None</span>
 <span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data_keys_dict</span> <span class="o">=</span> <span class="n">get_config_keys_dict_lists_of_json_template_keys</span><span class="p">(</span><span class="n">template_dict</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">)</span>
-
-    <span class="n">filled_in_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">template_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-    <span class="k">for</span> <span class="n">data_key</span><span class="p">,</span> <span class="n">data_value</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        
-        <span class="k">if</span> <span class="n">data_key</span> <span class="ow">in</span> <span class="n">data_keys_dict</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">data_keys_dict</span><span class="p">[</span><span class="n">data_key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;data_key - partial key not found in template -&#39;</span><span class="p">,</span> <span class="n">data_key</span><span class="p">)</span>
-                <span class="k">pass</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">data_key_list_member</span> <span class="ow">in</span> <span class="n">data_keys_dict</span><span class="p">[</span><span class="n">data_key</span><span class="p">]:</span>
-                    <span class="n">filled_in_dict</span><span class="p">[</span><span class="n">data_key_list_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_value</span>
-                
+    <span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">insert_data_dict_in_filled_in_dict</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">template_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+             
     <span class="k">return</span> <span class="n">filled_in_dict</span>
 
-<span class="k">def</span> <span class="nf">args_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;&quot; filled_in_dict = args_to_filledin_json( args_dict )</span>
+
+<span class="k">def</span> <span class="nf">args_dict_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot; filled_in_dict = args_dict_to_filledin_json( args_dict )</span>
 <span class="sd">    Args:</span>
 <span class="sd">        args_dict:       python dictionary with (required) keys &quot;i&quot;, &quot;jsonTemplate&quot;, &quot;o&quot;</span>
 <span class="sd">                         i              </span>
@@ -13584,7 +13640,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#                            Run All - uses all functions with the above written test data - - - run-for-all-test</span>
@@ -13600,7 +13656,7 @@ div#notebook {
              <span class="s1">&#39;jsonTemplate&#39;</span><span class="p">:</span> <span class="n">json_templ_filename</span><span class="p">,</span> 
              <span class="s1">&#39;o&#39;</span><span class="p">:</span> <span class="s1">&#39;de_nada&#39;</span><span class="p">}</span>
 
-<span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">)</span>
+<span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_dict_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Result of Algorithm == json file == local_args_dict_to_filledin_json</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -13655,7 +13711,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/test_config.txt
@@ -13691,7 +13747,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/config_test.json
@@ -13728,10 +13784,10 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_dict_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Result of Algorithm == json file == local_args_dict_to_filledin_json</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filled_in_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
@@ -13788,7 +13844,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/test_config.txt
@@ -13822,7 +13878,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/config_test.json
@@ -13858,10 +13914,10 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_dict_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Result of Algorithm == json file == local_args_dict_to_filledin_json</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filled_in_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
