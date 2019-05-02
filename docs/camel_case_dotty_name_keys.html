@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>camel_case_dotty_name_keys</title>
+<title>camel_case_dotty_name_keys_simple</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13113,7 +13113,11 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a id="top"></a></p>
-<h2 id="Proof-test:">Proof test:<a class="anchor-link" href="#Proof-test:">&#182;</a></h2><hr>
+<h2 id="Proof-test:">Proof test:<a class="anchor-link" href="#Proof-test:">&#182;</a></h2><h4 id="Limitations">Limitations<a class="anchor-link" href="#Limitations">&#182;</a></h4>
+<pre><code>* input variable names must be unique accross all input files
+* variable names not found in template file will be ignored
+</code></pre>
+<hr>
 <h3 id="Page-Links:">Page Links:<a class="anchor-link" href="#Page-Links:">&#182;</a></h3><p><a href="#write_simple_data">write test data</a> <br>
 <a href="#code">code</a> <br>
 <a href="#test_code">code - run with test data</a> <br>
@@ -13179,26 +13183,6 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[1]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>True</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13216,24 +13200,6 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Overwriting ../data/data/test_config.txt
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13248,24 +13214,6 @@ div#notebook {
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Overwriting ../data/data/config_test.json
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -13327,34 +13275,97 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Complete and tested with all features - replacement for config_json_parser.py module part -- ToDo NamesGame</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#        demo - test copy of module: config_json_parser.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">command line usage:</span>
+<span class="sd">python config_json_parser.py --jsonTemplate wf.tmplt.json -i config.txt -i config.json -o outfile_name.json</span>
+
+<span class="sd">1) Read WorkflowName.template.json,</span>
+<span class="sd">2) Fill value fields with config.(txt or json) file data,</span>
+<span class="sd">3) Write the out_file_name.json</span>
+
+<span class="sd">Arrays are only allowed in .json files</span>
+
+<span class="sd">any .txt files require unquoted key, equals sign and quoted string values:</span>
+<span class="sd">somevariable=&quot;the value string&quot;</span>
+
+<span class="sd">any ExtraOpeionsString keys require double double single quotes around values:</span>
+<span class="sd">someExtraOpeionsString=&quot;&quot;&#39;-it IS&#39;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="k">def</span> <span class="nf">read_json_file</span><span class="p">(</span><span class="n">json_file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; json_dict = read_json_file(json_file_name)</span>
 
-<span class="k">def</span> <span class="nf">key_duplicates_exist</span><span class="p">(</span><span class="n">dict_1</span><span class="p">,</span> <span class="n">dict_2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; True_or_False = key_duplicates_exist(dict_1, dict_2) </span>
-<span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">        dict_1:         a python dictionary of key: value pairs</span>
-<span class="sd">        dict_2:         a python dictionary of key: value pairs</span>
-<span class="sd">        </span>
+<span class="sd">        json_file_name:     full path file name to a json file</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        True_or_False:  True if any key in dict_1 exists in dict_2 (converse is same)</span>
-<span class="sd">        </span>
+<span class="sd">        json_dict:          a python dictionary</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dict_1_keys_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dict_1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dict_2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dict_1_keys_list</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        
-    <span class="k">return</span> <span class="kc">False</span>
-    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">file_handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed to open </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">json_file_name</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{}</span>
+
+
+<span class="k">def</span> <span class="nf">write_json_file</span><span class="p">(</span><span class="n">filled_in_dict</span><span class="p">,</span> <span class="n">out_file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; return_code = write_json_file(filled_in_dict, out_file_name)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filled_in_dict:     python dict of wdl dotty-names and config file data</span>
+<span class="sd">        out_file_name:      file name to write (expecting .json extension)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        return_code:        0 = success,       -1 = failed to write,      -2 = write crashed</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">return_code</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">filled_in_dict</span><span class="p">,</span> <span class="n">file_handle</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">):</span>
+            <span class="n">return_code</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">return_code</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">return_code</span>
+
+
+<span class="k">def</span> <span class="nf">get_json_keys_config_dict</span><span class="p">(</span><span class="n">json_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; json_keys_dict = get_json_keys_config_dict( json_template_dict )</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        json_dict:      Womtool generated json file as a python dict</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        keys_dict:      config_key to dotty_name   python dictionary</span>
+<span class="sd">                        variableName: WorkflowName.SubWorkflow.Task.variableName</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">keys_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">json_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">k_list</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">keys_dict</span><span class="p">[</span><span class="n">k_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">keys_dict</span>
+
 
 <span class="k">def</span> <span class="nf">conf_dict_extra_options_string_json_reformation</span><span class="p">(</span><span class="n">conf_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; conf_dict = conf_dict_extra_options_string_json_reformation(conf_dict)</span>
@@ -13376,71 +13387,19 @@ div#notebook {
     <span class="k">return</span> <span class="n">conf_dict</span>
 
 
-<span class="k">def</span> <span class="nf">read_json_file_as_deduped_dict</span><span class="p">(</span><span class="n">json_file_name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; json_dict, duplicates_dict = read_json_file_as_deduped_dict(json_file_name) </span>
-<span class="sd">    </span>
+<span class="k">def</span> <span class="nf">get_config_text_as_dict</span><span class="p">(</span><span class="n">conf_file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; conf_dict = get_config_text_as_dict(conf_file_name)</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        json_file_name:     valid json filename (file extension is not checked)</span>
-<span class="sd">        </span>
+<span class="sd">        conf_file_name: full file name of text file</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        json_dict:          the json file as a python dict</span>
-<span class="sd">        duplicates_dict:    is None if no duplicates exist</span>
-<span class="sd">        </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">json_dict</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">duplicates_dict</span> <span class="o">=</span> <span class="p">{}</span>
-    
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handle</span><span class="p">:</span>
-            <span class="n">json_str</span> <span class="o">=</span> <span class="n">file_handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">json_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed to open </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">json_file_name</span><span class="p">)</span> <span class="p">)</span>
-        <span class="k">pass</span>                                           <span class="c1"># Crash policy HERE</span>
-    
-
-    <span class="n">json_dict_counter</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">json_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-    
-    <span class="n">json_str</span> <span class="o">=</span> <span class="n">json_str</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">json_str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="n">line_list</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
-            <span class="n">line_key</span> <span class="o">=</span> <span class="n">line_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">line_key</span> <span class="ow">in</span> <span class="n">json_dict_counter</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">json_dict_counter</span><span class="p">[</span><span class="n">line_key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">json_dict_counter</span><span class="p">[</span><span class="n">line_key</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">json_dict_counter</span><span class="p">[</span><span class="n">line_key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="n">duplicates_dict</span><span class="p">[</span><span class="n">line_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_dict_counter</span><span class="p">[</span><span class="n">line_key</span><span class="p">]</span>
-                    
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">duplicates_dict</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Duplicate Keys found in&#39;</span><span class="p">,</span> <span class="n">json_file_name</span><span class="p">)</span>
-        <span class="c1">#                                          # Crash policy HERE -- or with Caller</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">duplicates_dict</span> <span class="o">=</span> <span class="kc">None</span>
-        
-    <span class="k">return</span> <span class="n">json_dict</span><span class="p">,</span> <span class="n">duplicates_dict</span>
-
-
-<span class="k">def</span> <span class="nf">read_config_text_as_deduped_dict</span><span class="p">(</span><span class="n">conf_file_name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; conf_dict, duplicates_dict = read_config_text_as_deduped_dict(conf_file_name) </span>
-<span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        conf_file_name:     a configuration - data file (text file with any extension)</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        json_dict:          the config file as a python dict</span>
-<span class="sd">        duplicates_dict:    is None if no duplicates exist</span>
+<span class="sd">        conf_dict:      python dictionary</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">conf_dict</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">duplicates_dict</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">conf_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed to open </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">conf_file_name</span><span class="p">)</span> <span class="p">)</span>
-        <span class="k">pass</span>                                           <span class="c1"># Crash policy HERE</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">conf_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span> <span class="ow">and</span> <span class="s1">&#39;=&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
@@ -13448,184 +13407,105 @@ div#notebook {
             <span class="n">key</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">split_pos</span><span class="p">]</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="n">split_pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">conf_dict</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">duplicates_dict</span><span class="p">:</span>
-                        <span class="n">duplicates_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">duplicates_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                        
                 <span class="n">conf_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">duplicates_dict</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Duplicate Keys found in&#39;</span><span class="p">,</span> <span class="n">conf_file_name</span><span class="p">)</span>
-        <span class="c1">#                                          # Crash policy HERE -- or with Caller</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">duplicates_dict</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">return</span> <span class="n">conf_dict</span><span class="p">,</span> <span class="n">duplicates_dict</span>
+    <span class="k">return</span> <span class="n">conf_dict</span>
 
 
-<span class="k">def</span> <span class="nf">config_files_list_to_dict</span><span class="p">(</span><span class="n">input_file_list</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; all_configs_dict = config_files_list_to_dict(input_file_list)</span>
-<span class="sd">    </span>
+<span class="c1"># new code allows period-separated data file keys aka Workflow specific or camel-case dotty names</span>
+<span class="k">def</span> <span class="nf">insert_dotty_keys</span><span class="p">(</span><span class="n">json_keys_config_dict</span><span class="p">,</span> <span class="n">config_data_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; new_key_values_dict = insert_dotty_keys(json_keys_config_dict, config_data_dict)</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        input_file_list:    a list of files </span>
-<span class="sd">        </span>
+<span class="sd">        json_keys_config_dict:  input dictionary of json_template variable-name lists of full variable-names</span>
+<span class="sd">        config_data_dict:       input config files as a python dict</span>
+
 <span class="sd">    Returns:</span>
-<span class="sd">        configs_dict:       consolodated config files dictionary with out duplicates</span>
-<span class="sd">        </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">input_file_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">input_file_list</span><span class="p">)</span>
-    <span class="n">configs_dict</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">input_file_list</span><span class="p">:</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">file_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">file_ext</span> <span class="o">==</span> <span class="s1">&#39;.json&#39;</span><span class="p">:</span>
-            <span class="n">tmp_dict</span><span class="p">,</span> <span class="n">duplicates_dict</span> <span class="o">=</span> <span class="n">read_json_file_as_deduped_dict</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">tmp_dict</span><span class="p">,</span> <span class="n">duplicates_dict</span> <span class="o">=</span> <span class="n">read_config_text_as_deduped_dict</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">tmp_dict</span> <span class="o">=</span> <span class="n">conf_dict_extra_options_string_json_reformation</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span>
-        <span class="c1">#                                          # Crash policy HERE - if duplicates_dict not empty or None</span>
-        
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">configs_dict</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">key_duplicates_exist</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">,</span> <span class="n">configs_dict</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Duplicates found in input_file_list&#39;</span><span class="p">)</span>
-                
-            <span class="n">configs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">tmp_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">configs_dict</span><span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">configs_dict</span>
-
-
-<span class="k">def</span> <span class="nf">config_dict_to_dotty_size_sorted_keys_list</span><span class="p">(</span><span class="n">config_dict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; size_sorted_keys_list = config_dict_to_dotty_size_sorted_keys_list(conf_dict) </span>
-<span class="sd">    Args:</span>
-<span class="sd">        config_dict:            python dictionary with Camel_Case_Dotty_Name keys:</span>
-<span class="sd">                                bqsr.SentieonThreads</span>
-<span class="sd">                                etcetera</span>
-<span class="sd">                                SomeTask.vcf_index.SentieonThreads</span>
-<span class="sd">    Returns:</span>
-<span class="sd">        size_sorted_keys_list:  keys in config_dict.keys() sorted by number of segments (largest first)</span>
-<span class="sd">                                SomeTask.vcf_index.SentieonThreads</span>
-<span class="sd">                                bqsr.SentieonThreads</span>
-<span class="sd">                                etcetera</span>
+<span class="sd">        json_keys_config_dict:  input dictionary with multi-dot variable names found in config_data_dict</span>
+<span class="sd">                                inserted with json key list and single name lists modified</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">keys_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">config_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">keys_len_list</span> <span class="o">=</span> <span class="p">[]</span>
-    
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">config_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">key_parts_list</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-        <span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">key_parts_list</span><span class="p">)</span>
-        <span class="n">keys_len_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">keys_len_list</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    
-    <span class="n">size_sorted_keys_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">)):</span>
-        <span class="n">size_sorted_keys_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">keys_list</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">k</span><span class="p">]])</span>
-
-    <span class="k">return</span> <span class="n">size_sorted_keys_list</span>
-
-
-<span class="k">def</span> <span class="nf">get_config_keys_dict_lists_of_json_template_keys</span><span class="p">(</span><span class="n">template_dict</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; keys_dict = get_config_keys_dict_lists_of_json_template_keys(template_dict, config_dict)</span>
-<span class="sd">    Args:</span>
-<span class="sd">        template_dict:  Womtool template output as python dict</span>
-<span class="sd">        config_dict:    configuration files merged into python dict</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        keys_dict:      python dict with config_dict keys where values are lists of partial-key matches</span>
-<span class="sd">                        from template dict</span>
-<span class="sd">                        </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">keys_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">config_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-    <span class="n">size_sorted_keys_list</span> <span class="o">=</span> <span class="n">config_dict_to_dotty_size_sorted_keys_list</span><span class="p">(</span><span class="n">config_dict</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">template_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="c1"># put each key in the longest name only</span>
-        <span class="n">key_found</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">for</span> <span class="n">config_key</span> <span class="ow">in</span> <span class="n">size_sorted_keys_list</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key_found</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">config_key</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">keys_dict</span><span class="p">[</span><span class="n">config_key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">keys_dict</span><span class="p">[</span><span class="n">config_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="n">keys_dict</span><span class="p">[</span><span class="n">config_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
-                <span class="n">key_found</span> <span class="o">=</span> <span class="kc">True</span>
-                
-            <span class="k">if</span> <span class="n">key_found</span><span class="p">:</span>
-                <span class="k">continue</span>
-
-    <span class="k">return</span> <span class="n">keys_dict</span>
-
-
-<span class="k">def</span> <span class="nf">insert_data_dict_in_filled_in_dict</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">filled_in_dict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; filled_in_dict = insert_data_dict_in_filled_in_dict(data_dict, filled_in_dict)</span>
-<span class="sd">    </span>
-<span class="sd">    Args:</span>
-<span class="sd">        data_dict:          python dict of key-value pairs s.t. values are valid data and keys are</span>
-<span class="sd">                            camel case dotty names found as right-to-left partial keys in filled_in_dict</span>
-<span class="sd">                            </span>
-<span class="sd">        filled_in_dict:     python dict of key-value pairs where keys are valid wdl names</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        filled_in_dict:     python dict with data_dict keys inserted in filled in dict locations if they exist</span>
-<span class="sd">        </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data_keys_dict</span> <span class="o">=</span> <span class="n">get_config_keys_dict_lists_of_json_template_keys</span><span class="p">(</span><span class="n">filled_in_dict</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">data_key</span><span class="p">,</span> <span class="n">data_value</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        
-        <span class="k">if</span> <span class="n">data_key</span> <span class="ow">in</span> <span class="n">data_keys_dict</span><span class="p">:</span>
-            
-            <span class="k">if</span> <span class="n">data_keys_dict</span><span class="p">[</span><span class="n">data_key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;data_key - partial key not found in template -&#39;</span><span class="p">,</span> <span class="n">data_key</span><span class="p">)</span>
-                <span class="k">pass</span>
-            
+    <span class="n">new_key_values_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">multi_dot_data_keys_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">data_key</span> <span class="ow">in</span> <span class="n">config_data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">short_key</span> <span class="o">=</span> <span class="n">data_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">short_key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">short_key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">multi_dot_data_keys_dict</span><span class="p">:</span>
+                <span class="n">multi_dot_data_keys_dict</span><span class="p">[</span><span class="n">short_key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_key</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">data_key_list_member</span> <span class="ow">in</span> <span class="n">data_keys_dict</span><span class="p">[</span><span class="n">data_key</span><span class="p">]:</span>
-                    <span class="n">filled_in_dict</span><span class="p">[</span><span class="n">data_key_list_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_value</span>
+                <span class="n">multi_dot_data_keys_dict</span><span class="p">[</span><span class="n">short_key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_key</span><span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">short_key</span><span class="p">,</span> <span class="n">long_keys_list</span> <span class="ow">in</span> <span class="n">multi_dot_data_keys_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">short_key</span> <span class="ow">in</span> <span class="n">json_keys_config_dict</span><span class="p">:</span>
+            <span class="n">key_value_list</span> <span class="o">=</span> <span class="n">json_keys_config_dict</span><span class="p">[</span><span class="n">short_key</span><span class="p">]</span>
+            <span class="n">key_value_remove_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">long_keys_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 
-    <span class="k">return</span> <span class="n">filled_in_dict</span>
+                <span class="k">for</span> <span class="n">long_key</span> <span class="ow">in</span> <span class="n">long_keys_list</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">key_value</span> <span class="ow">in</span> <span class="n">key_value_list</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">long_key</span> <span class="o">==</span> <span class="n">key_value</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">long_key</span><span class="p">):]:</span>
+                            <span class="n">new_key_values_dict</span><span class="p">[</span><span class="n">long_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key_value</span><span class="p">)</span>
+                            <span class="n">key_value_remove_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key_value</span><span class="p">)</span>
 
-
-<span class="k">def</span> <span class="nf">insert_dict_in_json_template</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">template_dict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; return filled_in_dict = insert_dict_in_json_template(data_dict, template_dict) </span>
-<span class="sd">    Args:</span>
-<span class="sd">        data_dict:          python dict - values for all partial-key-match template locations</span>
-<span class="sd">        template_dict:      python dict - values will be ignored herin</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">        filled_in_dict:     keys not found in data_dict return as None</span>
-<span class="sd">        </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">insert_data_dict_in_filled_in_dict</span><span class="p">(</span><span class="n">data_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">template_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
-             
-    <span class="k">return</span> <span class="n">filled_in_dict</span>
-
+            <span class="k">for</span> <span class="n">key_value</span> <span class="ow">in</span> <span class="n">key_value_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">key_value</span> <span class="ow">in</span> <span class="n">key_value_remove_list</span><span class="p">:</span>
+                    <span class="n">new_key_values_dict</span><span class="p">[</span><span class="n">short_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key_value</span><span class="p">)</span>
+                    
+    <span class="k">for</span> <span class="n">json_key</span><span class="p">,</span> <span class="n">json_key_list</span> <span class="ow">in</span> <span class="n">json_keys_config_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">json_key</span> <span class="ow">in</span> <span class="n">new_key_values_dict</span> <span class="ow">or</span> <span class="n">new_key_values_dict</span><span class="p">[</span><span class="n">json_key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_key_values_dict</span><span class="p">[</span><span class="n">json_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_key_list</span>
+    
+    <span class="k">return</span> <span class="n">new_key_values_dict</span>
 
 <span class="k">def</span> <span class="nf">args_dict_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;&quot; filled_in_dict = args_dict_to_filledin_json( args_dict )</span>
+    <span class="sd">&quot;&quot;&quot;&quot; return_code = args_dict_to_filledin_json( args_dict )</span>
+
 <span class="sd">    Args:</span>
-<span class="sd">        args_dict:       python dictionary with (required) keys &quot;i&quot;, &quot;jsonTemplate&quot;, &quot;o&quot;</span>
-<span class="sd">                         i              </span>
-<span class="sd">                         jsonTemplate</span>
-<span class="sd">                         o</span>
+<span class="sd">        args_dict:      python dict as read from command-line arguments</span>
+<span class="sd">            (required keys)</span>
+<span class="sd">            args_dict[&#39;i&#39;]:             input_file_list         (.txt or .json for arrays)</span>
+<span class="sd">            args_dict[&#39;o&#39;]:             output_file             (valid writable file name)</span>
+<span class="sd">            args_dict[&#39;jsonTemplate&#39;]:  json_template_file      (as generated from wdl file by Woomtool)</span>
+
 <span class="sd">    Returns:</span>
+<span class="sd">        return_code:    0 = success, -1 = write 0-length file -2 = write_json fail</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">input_file_list</span> <span class="o">=</span> <span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">]</span>
     <span class="n">json_template_file</span> <span class="o">=</span> <span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;jsonTemplate&#39;</span><span class="p">]</span>
     <span class="n">output_file</span> <span class="o">=</span> <span class="n">args_dict</span><span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">]</span>
 
-    <span class="n">all_config_dicts</span> <span class="o">=</span> <span class="n">config_files_list_to_dict</span><span class="p">(</span><span class="n">input_file_list</span><span class="p">)</span>
-    <span class="n">template_dict</span><span class="p">,</span> <span class="n">duplicates_dict</span> <span class="o">=</span> <span class="n">read_json_file_as_deduped_dict</span><span class="p">(</span><span class="n">json_template_file</span><span class="p">)</span>
+    <span class="n">template_dict</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="n">json_template_file</span><span class="p">)</span>
+
+    <span class="n">json_keys_config_dict</span> <span class="o">=</span> <span class="n">get_json_keys_config_dict</span><span class="p">(</span><span class="n">template_dict</span><span class="p">)</span>
+
+    <span class="n">all_config_dicts</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">input_file_list</span><span class="p">:</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">file_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_ext</span> <span class="o">==</span> <span class="s1">&#39;.json&#39;</span><span class="p">:</span>
+            <span class="n">tmp_dict</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp_dict</span> <span class="o">=</span> <span class="n">get_config_text_as_dict</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">tmp_dict</span> <span class="o">=</span> <span class="n">conf_dict_extra_options_string_json_reformation</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_dict</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">all_config_dicts</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">tmp_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">all_config_dicts</span><span class="p">}</span>
+
+    <span class="n">json_keys_config_dict</span> <span class="o">=</span> <span class="n">insert_dotty_keys</span><span class="p">(</span><span class="n">json_keys_config_dict</span><span class="p">,</span> <span class="n">all_config_dicts</span><span class="p">)</span>
+
+    <span class="n">filled_in_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">config_key</span><span class="p">,</span> <span class="n">config_value</span> <span class="ow">in</span> <span class="n">all_config_dicts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">config_key</span> <span class="ow">in</span> <span class="n">json_keys_config_dict</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">config_key</span> <span class="ow">in</span> <span class="n">filled_in_dict</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;overwrite config key set:&#39;</span><span class="p">,</span> <span class="n">config_key</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">config_key_multiple</span> <span class="ow">in</span> <span class="n">json_keys_config_dict</span><span class="p">[</span><span class="n">config_key</span><span class="p">]:</span>
+                <span class="n">filled_in_dict</span><span class="p">[</span><span class="n">config_key_multiple</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_value</span>
     
-    <span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">insert_dict_in_json_template</span><span class="p">(</span><span class="n">all_config_dicts</span><span class="p">,</span> <span class="n">template_dict</span><span class="p">)</span>
-    
-    <span class="c1"># check keys:                                          # Crash policy HERE -- or with Caller ?</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">filled_in_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;key </span><span class="si">%s</span><span class="s1"> missing value:&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">filled_in_dict</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-            
-    <span class="k">return</span> <span class="n">filled_in_dict</span>
+    <span class="n">rc</span> <span class="o">=</span> <span class="n">filled_in_dict</span> <span class="c1"># write_json_file(filled_in_dict, output_file)</span>
+    <span class="k">return</span> <span class="n">rc</span>
 </pre></div>
 
     </div>
@@ -13813,10 +13693,7 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Duplicate Keys found in ../data/data/config_test.json
-Duplicate Keys found in ../data/data/test_config.txt
-data_key - partial key not found in template - data_key.DNE
-
+<pre>
 Result of Algorithm == json file == local_args_dict_to_filledin_json
 
  1          &#34;GermlineMasterWF.AlignmentMetrics.SentieonThreads&#34;: &#34;32&#34;
@@ -13888,8 +13765,8 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%writefile</span> ../data/data/config_test.json
 <span class="p">{</span>
     <span class="s2">&quot;bqsr.SentieonThreads&quot;</span><span class="p">:</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;vcf_index.SentieonThreads&quot;</span><span class="p">:</span> <span class="s2">&quot;666&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;vcf_index.SentieonThreads&quot;</span><span class="p">:</span> <span class="s2">&quot;5&quot;</span>
+    <span class="s2">&quot;vcf_index.SentieonThreads&quot;</span><span class="p">:</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vcf_index.SentieonThreads&quot;</span><span class="p">:</span> <span class="s2">&quot;6777&quot;</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -13943,25 +13820,405 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Duplicate Keys found in ../data/data/config_test.json
-key GermlineMasterWF.AlignmentMetrics.SentieonThreads missing value: None
-key GermlineMasterWF.haplotype.SentieonThreads missing value: None
-key GermlineMasterWF.merge.SentieonThreads missing value: None
-key GermlineMasterWF.realign.SentieonThreads missing value: None
-key GermlineMasterWF.vqsr.SentieonThreads missing value: None
-
+<pre>
 Result of Algorithm == json file == local_args_dict_to_filledin_json
 
- 1          &#34;GermlineMasterWF.AlignmentMetrics.SentieonThreads&#34;: &#34;None&#34;
- 2        &#34;GermlineMasterWF.align.ALIGN_paired.SentieonThreads&#34;: &#34;2&#34;
- 3        &#34;GermlineMasterWF.align.ALIGN_single.SentieonThreads&#34;: &#34;3&#34;
- 4                      &#34;GermlineMasterWF.bqsr.SentieonThreads&#34;: &#34;4&#34;
- 5                     &#34;GermlineMasterWF.dedup.SentieonThreads&#34;: &#34;1&#34;
- 6                 &#34;GermlineMasterWF.haplotype.SentieonThreads&#34;: &#34;None&#34;
- 7                     &#34;GermlineMasterWF.merge.SentieonThreads&#34;: &#34;None&#34;
- 8                   &#34;GermlineMasterWF.realign.SentieonThreads&#34;: &#34;None&#34;
- 9                 &#34;GermlineMasterWF.vcf_index.SentieonThreads&#34;: &#34;5&#34;
-10                      &#34;GermlineMasterWF.vqsr.SentieonThreads&#34;: &#34;None&#34;
+ 1        &#34;GermlineMasterWF.align.ALIGN_paired.SentieonThreads&#34;: &#34;2&#34;
+ 2        &#34;GermlineMasterWF.align.ALIGN_single.SentieonThreads&#34;: &#34;3&#34;
+ 3                      &#34;GermlineMasterWF.bqsr.SentieonThreads&#34;: &#34;4&#34;
+ 4                     &#34;GermlineMasterWF.dedup.SentieonThreads&#34;: &#34;1&#34;
+ 5                 &#34;GermlineMasterWF.vcf_index.SentieonThreads&#34;: &#34;6777&#34;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_data_dir</span> <span class="o">=</span> <span class="s1">&#39;../../../../May_01_test_data&#39;</span>
+<span class="n">config_files_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_data_dir</span><span class="p">,</span> <span class="s1">&#39;Config&#39;</span><span class="p">)</span>
+<span class="n">json_files_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_data_dir</span><span class="p">,</span> <span class="s1">&#39;Jsons&#39;</span><span class="p">)</span>
+
+<span class="n">input_file_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_files_dir</span><span class="p">,</span> <span class="s1">&#39;tool_info.txt&#39;</span><span class="p">),</span> 
+                   <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_files_dir</span><span class="p">,</span> <span class="s1">&#39;run_info.txt&#39;</span><span class="p">),</span> 
+                   <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_files_dir</span><span class="p">,</span> <span class="s1">&#39;memory_info.txt&#39;</span><span class="p">),</span> 
+                   <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_files_dir</span><span class="p">,</span> <span class="s1">&#39;sample_info.json&#39;</span><span class="p">)]</span>
+
+<span class="n">json_template_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">json_files_dir</span><span class="p">,</span> <span class="s1">&#39;GermlineMasterWorkflow.template.json&#39;</span><span class="p">)</span>
+<span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">json_files_dir</span><span class="p">,</span> <span class="s1">&#39;GermlineMasterWorkflow.NotebookTest.json&#39;</span><span class="p">)</span>
+
+<span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="n">input_file_list</span><span class="p">,</span> <span class="s1">&#39;jsonTemplate&#39;</span><span class="p">:</span> <span class="n">json_template_file</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">:</span> <span class="n">output_file</span><span class="p">}</span>
+<span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_dict_to_filledin_json</span><span class="p">(</span> <span class="n">args_dict</span> <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">len(filled_in_dict) = </span><span class="si">%i</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filled_in_dict</span><span class="p">)))</span>
+
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">filled_in_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">vl</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">vl</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+len(filled_in_dict) = 166
+
+GermlineMasterWF.bqsr.SampleName : benchmarking_test
+
+GermlineMasterWF.DAB.SampleName : benchmarking_test
+
+GermlineMasterWF.merge.SampleName : benchmarking_test
+
+GermlineMasterWF.trimseq.SampleName : benchmarking_test
+
+GermlineMasterWF.realign.SampleName : benchmarking_test
+
+GermlineMasterWF.haplotype.SampleName : benchmarking_test
+
+GermlineMasterWF.dedup.SampleName : benchmarking_test
+
+GermlineMasterWF.DHVC.SampleName : benchmarking_test
+
+GermlineMasterWF.vqsr.SampleName : benchmarking_test
+
+GermlineMasterWF.align.SampleName : benchmarking_test
+
+GermlineMasterWF.align.PlatformUnit : FLOWCELL_BARCODE.LANE1.SAMPLE_BARCODE,FLOWCELL_BARCODE.LANE2.SAMPLE_BARCODE
+
+GermlineMasterWF.NormalInputReads :
+[&#39;/projects/bioinformatics/DEL/Inputs/WGS_chr1_5X_E0.005_L1_read1.fastq.gz&#39;, &#39;/projects/bioinformatics/DEL/Inputs/WGS_chr1_5X_E0.005_L1_read2.fastq.gz&#39;]
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.TrimHardMemLimit : 100G
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimHardMemLimit : 100G
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimSoftMemLimit : 100G
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.TrimSoftMemLimit : 100G
+
+GermlineMasterWF.align.ALIGN_single.AlignHardMemLimit : 100G
+
+GermlineMasterWF.align.ALIGN_paired.AlignHardMemLimit : 100G
+
+GermlineMasterWF.align.ALIGN_single.AlignSoftMemLimit : 100G
+
+GermlineMasterWF.align.ALIGN_paired.AlignSoftMemLimit : 100G
+
+GermlineMasterWF.dedup.DedupHardMemLimit : 100G
+
+GermlineMasterWF.dedup.DedupSoftMemLimit : 100G
+
+GermlineMasterWF.merge.MergeHardMemLimit : 100G
+
+GermlineMasterWF.merge.MergeSoftMemLimit : 100G
+
+GermlineMasterWF.realign.RealignHardMemLimit : 100G
+
+GermlineMasterWF.realign.RealignSoftMemLimit : 100G
+
+GermlineMasterWF.bqsr.BqsrHardMemLimit : 100G
+
+GermlineMasterWF.bqsr.BqsrSoftMemLimit : 100G
+
+GermlineMasterWF.vqsr.VqsrHardMemLimit : 100G
+
+GermlineMasterWF.vqsr.VqsrSoftMemLimit : 100G
+
+GermlineMasterWF.haplotype.HaplotyperHardMemLimit : 100G
+
+GermlineMasterWF.haplotype.HaplotyperSoftMemLimit : 100G
+
+GermlineMasterWF.bqsr.DebugMode : -d
+
+GermlineMasterWF.dedup.DebugMode : -d
+
+GermlineMasterWF.realign.DebugMode : -d
+
+GermlineMasterWF.DAB.DebugMode : -d
+
+GermlineMasterWF.haplotype.DebugMode : -d
+
+GermlineMasterWF.align.ALIGN_single.DebugMode : -d
+
+GermlineMasterWF.DHVC.DebugMode : -d
+
+GermlineMasterWF.vqsr.DebugMode : -d
+
+GermlineMasterWF.align.ALIGN_paired.DebugMode : -d
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.DebugMode : -d
+
+GermlineMasterWF.merge.DebugMode : -d
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.DebugMode : -d
+
+GermlineMasterWF.align.ALIGN_paired.PairedEnd : true
+
+GermlineMasterWF.trimseq.PairedEnd : true
+
+GermlineMasterWF.align.ALIGN_single.PairedEnd : true
+
+GermlineMasterWF.align.PairedEnd : true
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.PairedEnd : true
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.PairedEnd : true
+
+GermlineMasterWF.Trimming : true
+
+GermlineMasterWF.MarkDuplicates : true
+
+GermlineMasterWF.RunBqsr : false
+
+GermlineMasterWF.Vqsr : false
+
+GermlineMasterWF.bqsr.ProduceRecalBam : false
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.Adapters : /projects/bioinformatics/jallen17/Inputs/TruSeqAdaptors.fasta
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.Adapters : /projects/bioinformatics/jallen17/Inputs/TruSeqAdaptors.fasta
+
+GermlineMasterWF.bqsr.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+
+GermlineMasterWF.haplotype.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+
+GermlineMasterWF.vqsr.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+
+GermlineMasterWF.realign.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+
+GermlineMasterWF.align.ALIGN_paired.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+
+GermlineMasterWF.align.ALIGN_single.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+
+GermlineMasterWF.align.ALIGN_single.RefAnn : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.ann
+
+GermlineMasterWF.align.ALIGN_paired.RefAnn : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.ann
+
+GermlineMasterWF.align.ALIGN_paired.RefSa : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.sa
+
+GermlineMasterWF.align.ALIGN_single.RefSa : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.sa
+
+GermlineMasterWF.align.ALIGN_single.RefBwt : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.bwt
+
+GermlineMasterWF.align.ALIGN_paired.RefBwt : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.bwt
+
+GermlineMasterWF.align.ALIGN_paired.RefPac : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.pac
+
+GermlineMasterWF.align.ALIGN_single.RefPac : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.pac
+
+GermlineMasterWF.align.ALIGN_single.RefAmb : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.amb
+
+GermlineMasterWF.align.ALIGN_paired.RefAmb : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.amb
+
+GermlineMasterWF.haplotype.RefFai : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai
+
+GermlineMasterWF.realign.RefFai : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai
+
+GermlineMasterWF.bqsr.RefFai : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai
+
+GermlineMasterWF.vqsr.RefFai : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai
+
+GermlineMasterWF.align.ALIGN_paired.Platform : ILLUMINA
+
+GermlineMasterWF.align.ALIGN_single.Platform : ILLUMINA
+
+GermlineMasterWF.align.ALIGN_paired.Library : fake_lib
+
+GermlineMasterWF.align.ALIGN_single.Library : fake_lib
+
+GermlineMasterWF.align.ALIGN_paired.CenterName : some_seq_center
+
+GermlineMasterWF.align.ALIGN_single.CenterName : some_seq_center
+
+GermlineMasterWF.align.ALIGN_paired.ChunkSizeInBases : 10000000
+
+GermlineMasterWF.align.ALIGN_single.ChunkSizeInBases : 10000000
+
+GermlineMasterWF.align.ALIGN_paired.BWAExtraOptionsString : &#34;&#39;-M&#39;&#34;
+
+GermlineMasterWF.align.ALIGN_single.BWAExtraOptionsString : &#34;&#39;-M&#39;&#34;
+
+GermlineMasterWF.bqsr.BqsrKnownSites : /projects/bioinformatics/jallen17/Reference/Mills_and_1000G_gold_standard.indels.hg38.vcf,/projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf
+
+GermlineMasterWF.realign.RealignmentKnownSites : /projects/bioinformatics/jallen17/Reference/Mills_and_1000G_gold_standard.indels.hg38.vcf
+
+GermlineMasterWF.haplotype.DBSNP : /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf
+
+GermlineMasterWF.haplotype.DBSNPIdx : /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf.idx
+
+GermlineMasterWF.haplotype.HaplotyperExtraOptionsString : &#34;&#39; &#39;&#34;
+
+GermlineMasterWF.vqsr.VqsrSnpResourceString : &#34;&#39;--resource /projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource_param 1000G,known=false,training=true,truth=false,prior=10.0 --resource /projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/1000G_omni2.5.hg38.vcf.gz --resource_param omni,known=false,training=true,truth=false,prior=12.0 --resource /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf --resource_param dbsnp,known=true,training=false,truth=false,prior=2.0 --resource /projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/hapmap_3.3.hg38.vcf.gz --resource_param hapmap,known=false,training=true,truth=true,prior=15.0&#39;&#34;
+
+GermlineMasterWF.vqsr.VqsrIndelResourceString : &#34;&#39;--resource /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf --resource_param dbsnp,known=true,training=false,truth=false,prior=2.0 --resource /projects/bioinformatics/jallen17/Reference/Mills_and_1000G_gold_standard.indels.hg38.vcf --resource_param Mills,known=false,training=true,truth=true,prior=12.0&#39;&#34;
+
+GermlineMasterWF.vqsr.AnnotateText : &#34;&#39;--annotation DP --annotation QD --annotation FS --annotation SOR --annotation MQ --annotation MQRankSum --annotation ReadPosRankSum&#39;&#34;
+
+GermlineMasterWF.DAB.DeliveryFolder_Alignment : /projects/bioinformatics/DEL/zzTestGermline/Delivery/Alignment_FirstTest
+
+GermlineMasterWF.DHVC.DeliveryFolder_HaplotyperVC : /projects/bioinformatics/DEL/zzTestGermline/Delivery/HaplotyperVC_FirstTest
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.CutAdapt : /usr/local/apps/bioapps/python/Python-3.6.1/bin
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.CutAdapt : /usr/local/apps/bioapps/python/Python-3.6.1/bin
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimSeqScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/trim_sequences.sh
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.TrimSeqScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/trim_sequences.sh
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.CutAdaptThreads : 8
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.CutAdaptThreads : 8
+
+GermlineMasterWF.align.ALIGN_paired.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+
+GermlineMasterWF.dedup.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+
+GermlineMasterWF.align.ALIGN_single.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+
+GermlineMasterWF.realign.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+
+GermlineMasterWF.bqsr.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+
+GermlineMasterWF.haplotype.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+
+GermlineMasterWF.vqsr.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+
+GermlineMasterWF.merge.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+
+GermlineMasterWF.dedup.SentieonThreads : 40
+
+GermlineMasterWF.bqsr.SentieonThreads : 40
+
+GermlineMasterWF.realign.SentieonThreads : 40
+
+GermlineMasterWF.vqsr.SentieonThreads : 40
+
+GermlineMasterWF.align.ALIGN_single.SentieonThreads : 40
+
+GermlineMasterWF.merge.SentieonThreads : 40
+
+GermlineMasterWF.haplotype.SentieonThreads : 40
+
+GermlineMasterWF.align.ALIGN_paired.SentieonThreads : 40
+
+GermlineMasterWF.align.ALIGN_paired.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.bqsr.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.haplotype.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.DAB.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.realign.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.vqsr.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.align.ALIGN_single.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.dedup.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.DHVC.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.merge.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+
+GermlineMasterWF.dedup.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.DHVC.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.align.ALIGN_single.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.haplotype.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.merge.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.realign.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.align.ALIGN_paired.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.bqsr.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.vqsr.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.DAB.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+
+GermlineMasterWF.align.ALIGN_paired.AlignmentScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/alignment.sh
+
+GermlineMasterWF.align.ALIGN_single.AlignmentScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/alignment.sh
+
+GermlineMasterWF.dedup.DedupScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/dedup.sh
+
+GermlineMasterWF.realign.RealignmentScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/realignment.sh
+
+GermlineMasterWF.bqsr.BqsrScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/bqsr.sh
+
+GermlineMasterWF.haplotype.HaplotyperScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/haplotyper.sh
+
+GermlineMasterWF.vqsr.VqsrScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/vqsr.sh
+
+GermlineMasterWF.DAB.DeliveryAlignment_Script : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/deliver_alignment.sh
+
+GermlineMasterWF.merge.MergeBamScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/merge_bams.sh
+
+GermlineMasterWF.DHVC.DeliveryHaplotyperVC_Script : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/deliver_haplotyperVC.sh
+
+GermlineMasterWF.DHVC.WorkflowJson : /projects/bioinformatics/jallen17/Jsons/GermlineMasterWorkflow.FilledIn.json
+
+GermlineMasterWF.DAB.WorkflowJson : /projects/bioinformatics/jallen17/Jsons/GermlineMasterWorkflow.FilledIn.json
+
+GermlineMasterWF.align.ALIGN_paired.AlignEnvProfile : /projects/bioinformatics/jallen17/Config/AlignEnvProfile.file
+
+GermlineMasterWF.align.ALIGN_single.AlignEnvProfile : /projects/bioinformatics/jallen17/Config/AlignEnvProfile.file
+
+GermlineMasterWF.merge.MergeBamEnvProfile : /projects/bioinformatics/jallen17/Config/MergeBamEnvProfile.file
+
+GermlineMasterWF.dedup.DedupEnvProfile : /projects/bioinformatics/jallen17/Config/DedupEnvProfile.file
+
+GermlineMasterWF.trimseq.TRIMSEQ_single.TrimEnvProfile : /projects/bioinformatics/jallen17/Config/TrimEnvProfile.file
+
+GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimEnvProfile : /projects/bioinformatics/jallen17/Config/TrimEnvProfile.file
+
+GermlineMasterWF.bqsr.BqsrEnvProfile : /projects/bioinformatics/jallen17/Config/BqsrEnvProfile.file
+
+GermlineMasterWF.realign.RealignEnvProfile : /projects/bioinformatics/jallen17/Config/RealignEnvProfile.file
+
+GermlineMasterWF.haplotype.HaplotyperEnvProfile : /projects/bioinformatics/jallen17/Config/HaplotyperEnvProfile.file
+
+GermlineMasterWF.haplotype.HaplotyperVCFSourceField : /projects/bioinformatics/jallen17/Config/HaplotyperVCFSourceField.file
+
+GermlineMasterWF.vqsr.VqsrEnvProfile : /projects/bioinformatics/jallen17/Config/VqsrEnvProfile.file
+
 </pre>
 </div>
 </div>
@@ -13974,9 +14231,9 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a id="iforge_test_header"></a></p>
-<h1 id="Testing-On-iforge:-April-25,-2019---two-workflows-tested">Testing On iforge: April 25, 2019 - two workflows tested<a class="anchor-link" href="#Testing-On-iforge:-April-25,-2019---two-workflows-tested">&#182;</a></h1><p><a href="https://git.ncsa.illinois.edu/mayomics/MayomicsVC/blob/dev_json_config/src/wdl/SomaticVC/MultiTumor.wdl">MultiTumor.wdl</a> <br></p>
+<h1 id="Testing-On-iforge:-May-2,-2019---two-workflows-tested">Testing On iforge: May 2, 2019 - two workflows tested<a class="anchor-link" href="#Testing-On-iforge:-May-2,-2019---two-workflows-tested">&#182;</a></h1><p><a href="https://git.ncsa.illinois.edu/mayomics/MayomicsVC/blob/dev_json_config/src/wdl/SomaticVC/MultiTumor.wdl">MultiTumor.wdl</a> <br></p>
 <p><a href="https://git.ncsa.illinois.edu/mayomics/MayomicsVC/blob/dev_json_config/src/wdl/GermlineMasterWorkflow.wdl">GermlineMasterWorkflow.wdl</a> <br></p>
-<h2 id="Both-produced-complete-workflow.fillein.json-files-with-the-noted-validator-warnings.">Both produced complete workflow.fillein.json files with the noted validator warnings.<a class="anchor-link" href="#Both-produced-complete-workflow.fillein.json-files-with-the-noted-validator-warnings.">&#182;</a></h2><hr>
+<h2 id="Both-produced-complete-workflow.fillein.json-files-with-the.">Both produced complete workflow.fillein.json files with the.<a class="anchor-link" href="#Both-produced-complete-workflow.fillein.json-files-with-the.">&#182;</a></h2><hr>
 
 </div>
 </div>
@@ -13990,65 +14247,45 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 <span class="c1"># /projects/bioinformatics/DEL/zzTestSomatic</span>
 <span class="c1"># code branch dev_json_config</span>
 </pre></div>
-<h3 id="test-script-make_json.sh">test script <em>make_json.sh</em><a class="anchor-link" href="#test-script-make_json.sh">&#182;</a></h3><div class="highlight"><pre><span></span>#!/bin/bash
-
-# bash make_json.sh . MayomicsVC/src/wdl/SomaticVC/MultiTumor.wdl &quot;-i Config/run_info.txt -i Config/tool_info.txt -i Config/memory_info.txt -i Config/sample_info.json&quot;
-
-set -x
-set -o errexit
-set -o pipefail
-set -o nounset
-
-#       path to test folder (run directory)
-TestingMayomics=$1
-
-#       workflow is being tested: a .wdl file
-WorkflowBeingTested=$2;
-BaseNameOfWorkflowBeingTested=`basename ${WorkflowBeingTested} .wdl`
-
-#       config files to use like this: &quot;-i /full/path/to/config1.txt -i /full/path/to/config2.txt etc...&quot;
-ConfigsBeingUsed=$3;
-
-if [[ &quot;$(ls -A ./Delivery)&quot; ]]; then
-    rm -r ./Delivery/*
-fi
-
-cd ${TestingMayomics};
-
-source /etc/profile.d/modules.sh
-module load /usr/local/apps/bioapps/modules/cromwell/cromwell-34;
-module load python/python-3.6.1;
-
-#       create JSON template
-java -jar ${WOMTOOL} inputs ${WorkflowBeingTested} &gt; Jsons/${BaseNameOfWorkflowBeingTested}.template.json;
-
-#populate the JSON template
-python MayomicsVC/src/python/config_json_parser.py ${ConfigsBeingUsed} --jsonTemplate Jsons/${BaseNameOfWorkflowBeingTested}.template.json -o Jsons/${BaseNameOfWorkflowBeingTested}.FilledIn.json;
-
-#validate the JSON template
-python MayomicsVC/src/python/key_validator.py -i Jsons/${BaseNameOfWorkflowBeingTested}.FilledIn.json --KeyTypeFile MayomicsVC/key_types.json;
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="validator-response:">validator response:<a class="anchor-link" href="#validator-response:">&#182;</a></h3><div class="highlight"><pre><span></span>+ python MayomicsVC/src/python/key_validator.py -i Jsons/MultiTumor.FilledIn.json --KeyTypeFile MayomicsVC/key_types.json
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;BcftoolsExtraOptionsString&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;FixDPScript&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;IndelGtFixScript&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;MantaEnvProfile&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;PanelNormalsIdx&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunBqsr&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunManta&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunMutect&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunStrelka&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;SampleNameTumorArray&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;SnpGtFixScript&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;TumorOnly&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:05:08-0500<span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> Key validation finished successfully with <span class="m">12</span> warning<span class="o">(</span>s<span class="o">)</span> issued
+<h3 id="test-script-make_json.sh">test script <em>make_json.sh</em><a class="anchor-link" href="#test-script-make_json.sh">&#182;</a></h3><div class="highlight"><pre><span></span><span class="o">[</span>lanier4@iforgehn3 zzTestSomatic<span class="o">]</span> cat Config/tool_info.txt <span class="p">|</span> grep SentieonThreads
+<span class="nv">SentieonThreads</span><span class="o">=</span><span class="s2">&quot;40&quot;</span>
+NormalDedup.SentieonThreads<span class="o">=</span><span class="s2">&quot;12&quot;</span>
+NormalAlign.ALIGN_paired.SentieonThreads<span class="o">=</span><span class="s2">&quot;33&quot;</span>
+NormalAlign.ALIGN_single.SentieonThreads<span class="o">=</span><span class="s2">&quot;7&quot;</span>
+<span class="o">[</span>lanier4@iforgehn3 zzTestSomatic<span class="o">]</span> bash make_json.sh . MayomicsVC/src/wdl/SomaticVC/MultiTumor.wdl <span class="s2">&quot;-i Config/run_info.txt -i Config/tool_info.txt -i Config/memory_info.txt -i Config/sample_info.json&quot;</span>
+<span class="c1"># ...</span>
+<span class="c1"># Note that the validator WARNINGs are unrelated to this parser</span>
++ python MayomicsVC/src/python/key_validator.py -i Jsons/MultiTumor.FilledIn.json --KeyTypeFile MayomicsVC/key_types.json
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;BcftoolsExtraOptionsString&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;FixDPScript&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;IndelGtFixScript&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;MantaEnvProfile&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;PanelNormalsIdx&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunBqsr&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunManta&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunMutect&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunStrelka&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;SampleNameTumorArray&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;SnpGtFixScript&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;TumorOnly&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T17:01:18-0500<span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> Key validation finished successfully with <span class="m">12</span> warning<span class="o">(</span>s<span class="o">)</span> issued
+<span class="o">[</span>lanier4@iforgehn3 zzTestSomatic<span class="o">]</span> cat Jsons/MultiTumor.FilledIn.json <span class="p">|</span> grep SentieonThreads
+    <span class="s2">&quot;SomaticVCWorkflow.NormalAlign.ALIGN_paired.SentieonThreads&quot;</span>: <span class="s2">&quot;33&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.NormalAlign.ALIGN_single.SentieonThreads&quot;</span>: <span class="s2">&quot;7&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.NormalDedup.SentieonThreads&quot;</span>: <span class="s2">&quot;12&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.NormalMergeBam.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.SomaticVC.NormalBqsr.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.SomaticVC.NormalRealign.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.SomaticVC.TumorBqsr.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.SomaticVC.TumorRealign.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.SomaticVCTumorOnly.NormalBqsr.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.SomaticVCTumorOnly.NormalRealign.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.SomaticVCTumorOnly.TumorBqsr.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.SomaticVCTumorOnly.TumorRealign.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.TumorAlign.ALIGN_paired.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.TumorAlign.ALIGN_single.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.TumorDedup.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;SomaticVCWorkflow.TumorMergeBam.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
 </pre></div>
 
 </div>
@@ -14063,57 +14300,25 @@ python MayomicsVC/src/python/key_validator.py -i Jsons/${BaseNameOfWorkflowBeing
 <span class="c1"># /projects/bioinformatics/DEL/zzTestGermline  </span>
 <span class="c1"># code branch dev_json_config</span>
 </pre></div>
-<h3 id="test-script-germline_mkjson.sh">test script <em>germline_mkjson.sh</em><a class="anchor-link" href="#test-script-germline_mkjson.sh">&#182;</a></h3><div class="highlight"><pre><span></span>#!/bin/bash
-
-#bash germline_mkjson.sh . MayomicsVC/src/wdl/GermlineMasterWorkflow.wdl &quot;-i Config/sample_info.json -i Config/tool_info.txt -i Config/run_info.txt -i Config/memory_info.txt&quot;
-
-set -x
-set -o errexit
-set -o pipefail
-set -o nounset
-
-#Define the path to test folder
-TestingMayomics=$1
-
-#define which stage of the workflow is being tested: is a .wdl file
-WorkflowBeingTested=$2;
-BaseNameOfWorkflowBeingTested=`basename \${WorkflowBeingTested} .wdl`
-
-#define which config files to use in this test
-ConfigsBeingUsed=$3;
-
-if [[ &quot;$(ls -A ./Delivery)&quot; ]]; then
-    rm -r ./Delivery/*
-fi
-
-cd ${TestingMayomics};
-
-source /etc/profile.d/modules.sh
-module load /usr/local/apps/bioapps/modules/cromwell/cromwell-34;
-module load python/python-3.6.1;
-
-# create JSON template
-#cd &quot;./MayomicsVC/&quot;; 
-java -jar ${WOMTOOL} inputs ${WorkflowBeingTested} &gt; Jsons/${BaseNameOfWorkflowBeingTested}.template.json;
-#cd ../;
-
-#populate the JSON template
-python MayomicsVC/src/python/config_json_parser.py ${ConfigsBeingUsed} --jsonTemplate Jsons/${BaseNameOfWorkflowBeingTested}.template.json -o Jsons/\${BaseNameOfWorkflowBeingTested}.FilledIn.json;
-
-#validate the JSON template
-python MayomicsVC/src/python/key_validator.py -i Jsons/${BaseNameOfWorkflowBeingTested}.FilledIn.json --KeyTypeFile MayomicsVC/key_types.json;
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="validator-response:">validator response:<a class="anchor-link" href="#validator-response:">&#182;</a></h3><div class="highlight"><pre><span></span>+ python MayomicsVC/src/python/key_validator.py -i Jsons/GermlineMasterWorkflow.FilledIn.json --KeyTypeFile MayomicsVC/key_types.json
-<span class="o">[</span>2019-04-25T16:08:55-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;HaplotyperVCFSourceField&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:08:55-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunBqsr&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
-<span class="o">[</span>2019-04-25T16:08:55-0500<span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> Key validation finished successfully with <span class="m">2</span> warning<span class="o">(</span>s<span class="o">)</span> issued
+<h3 id="test-script-germline_mkjson.sh">test script <em>germline_mkjson.sh</em><a class="anchor-link" href="#test-script-germline_mkjson.sh">&#182;</a></h3><div class="highlight"><pre><span></span><span class="o">[</span>lanier4@iforgehn3 zzTestGermline<span class="o">]</span> cat Config/tool_info.txt <span class="p">|</span> grep SentieonThreads
+<span class="nv">SentieonThreads</span><span class="o">=</span><span class="s2">&quot;40&quot;</span>
+bqsr.SentieonThreads<span class="o">=</span><span class="s2">&quot;20&quot;</span>
+dedup.SentieonThreads<span class="o">=</span><span class="s2">&quot;27&quot;</span>
+bash germline_mkjson.sh . MayomicsVC/src/wdl/GermlineMasterWorkflow.wdl <span class="s2">&quot;-i Config/sample_info.json -i Config/tool_info.txt -i Config/run_info.txt -i Config/memory_info.txt&quot;</span>
+<span class="c1"># ...</span>
+<span class="c1"># Note that the validator WARNINGs are unrelated to this parser</span>
+<span class="o">[</span>2019-05-02T16:47:21-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;HaplotyperVCFSourceField&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T16:47:21-0500<span class="o">]</span> <span class="o">[</span>WARNING<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> The variable <span class="s2">&quot;RunBqsr&quot;</span> is present in the json config file but not in the key types file. Its value is unchecked! To check this value, add the key to the key <span class="nb">type</span> file
+<span class="o">[</span>2019-05-02T16:47:21-0500<span class="o">]</span> <span class="o">[</span>INFO<span class="o">]</span> <span class="o">[</span>validator.key_validation.Validator<span class="o">]</span> <span class="o">[</span>NA<span class="o">]</span> <span class="o">[</span>-<span class="o">]</span> Key validation finished successfully with <span class="m">2</span> warning<span class="o">(</span>s<span class="o">)</span> issued
+<span class="o">[</span>lanier4@iforgehn3 zzTestGermline<span class="o">]</span> cat Jsons/GermlineMasterWorkflow.FilledIn.json <span class="p">|</span> grep SentieonThreads
+    <span class="s2">&quot;GermlineMasterWF.align.ALIGN_paired.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;GermlineMasterWF.align.ALIGN_single.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;GermlineMasterWF.bqsr.SentieonThreads&quot;</span>: <span class="s2">&quot;20&quot;</span>,
+    <span class="s2">&quot;GermlineMasterWF.dedup.SentieonThreads&quot;</span>: <span class="s2">&quot;27&quot;</span>,
+    <span class="s2">&quot;GermlineMasterWF.haplotype.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;GermlineMasterWF.merge.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;GermlineMasterWF.realign.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
+    <span class="s2">&quot;GermlineMasterWF.vqsr.SentieonThreads&quot;</span>: <span class="s2">&quot;40&quot;</span>,
 </pre></div>
 
 </div>
