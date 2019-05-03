@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>camel_case_dotty_name_keys_simple</title>
+<title>camel_case_dotty_name_keys</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13117,6 +13117,10 @@ div#notebook {
 <pre><code>* input variable names must be unique accross all input files
 * variable names not found in template file will be ignored
 </code></pre>
+<h4 id="Error-handling-(None)">Error handling (None)<a class="anchor-link" href="#Error-handling-(None)">&#182;</a></h4>
+<pre><code>* input variable name clash resolved by latest is overwritiest
+* variable names not in template file broadcast to command line
+</code></pre>
 <hr>
 <h3 id="Page-Links:">Page Links:<a class="anchor-link" href="#Page-Links:">&#182;</a></h3><p><a href="#write_simple_data">write test data</a> <br>
 <a href="#code">code</a> <br>
@@ -13124,7 +13128,8 @@ div#notebook {
 <a href="#missing_n_duplicate_key_test">missing and duplicate keys test</a> <br>
 <a href="duplicate_json_input_keys_test">duplicate json input keys test</a> <br></p>
 <hr>
-<p><a href="#iforge_test_header">Iforge Test Runs</a> <br>
+<p><a href="#full_germline_wdl_output">Germline master - filled in json output</a> <br>
+<a href="#iforge_test_header">Iforge Test Runs</a> <br>
 <a href="#MultiTumor_wdl">MultiTumor.wdl </a> <br>
 <a href="#GermlineMasterWorkflow_wdl">GermlineMasterWorkflow.wdl </a> <br></p>
 <hr>
@@ -13176,10 +13181,32 @@ div#notebook {
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="n">notebook_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;../../../src/python/&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[1]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -13200,6 +13227,24 @@ div#notebook {
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Overwriting ../data/data/test_config.txt
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13214,6 +13259,24 @@ div#notebook {
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Overwriting ../data/data/config_test.json
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -13424,21 +13487,22 @@ div#notebook {
 <span class="sd">        json_keys_config_dict:  input dictionary with multi-dot variable names found in config_data_dict</span>
 <span class="sd">                                inserted with json key list and single name lists modified</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">new_key_values_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
     <span class="n">multi_dot_data_keys_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">new_key_values_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    
+    <span class="c1"># insert dot-separated names into the rightmost name key list</span>
     <span class="k">for</span> <span class="n">data_key</span> <span class="ow">in</span> <span class="n">config_data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">short_key</span> <span class="o">=</span> <span class="n">data_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">short_key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">short_key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">multi_dot_data_keys_dict</span><span class="p">:</span>
-                <span class="n">multi_dot_data_keys_dict</span><span class="p">[</span><span class="n">short_key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_key</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">multi_dot_data_keys_dict</span><span class="p">[</span><span class="n">short_key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_key</span><span class="p">]</span>
+            <span class="n">multi_dot_data_keys_dict</span><span class="p">[</span><span class="n">short_key</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_key</span><span class="p">)</span>
     
+    <span class="c1"># each input-data-key with multi-dot-keys re-list their json-full-key locations</span>
     <span class="k">for</span> <span class="n">short_key</span><span class="p">,</span> <span class="n">long_keys_list</span> <span class="ow">in</span> <span class="n">multi_dot_data_keys_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">short_key</span> <span class="ow">in</span> <span class="n">json_keys_config_dict</span><span class="p">:</span>
             <span class="n">key_value_list</span> <span class="o">=</span> <span class="n">json_keys_config_dict</span><span class="p">[</span><span class="n">short_key</span><span class="p">]</span>
             <span class="n">key_value_remove_list</span> <span class="o">=</span> <span class="p">[]</span>
+            
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">long_keys_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 
                 <span class="k">for</span> <span class="n">long_key</span> <span class="ow">in</span> <span class="n">long_keys_list</span><span class="p">:</span>
@@ -13450,12 +13514,13 @@ div#notebook {
             <span class="k">for</span> <span class="n">key_value</span> <span class="ow">in</span> <span class="n">key_value_list</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">key_value</span> <span class="ow">in</span> <span class="n">key_value_remove_list</span><span class="p">:</span>
                     <span class="n">new_key_values_dict</span><span class="p">[</span><span class="n">short_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key_value</span><span class="p">)</span>
-                    
-    <span class="k">for</span> <span class="n">json_key</span><span class="p">,</span> <span class="n">json_key_list</span> <span class="ow">in</span> <span class="n">json_keys_config_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">json_key</span> <span class="ow">in</span> <span class="n">new_key_values_dict</span> <span class="ow">or</span> <span class="n">new_key_values_dict</span><span class="p">[</span><span class="n">json_key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">new_key_values_dict</span><span class="p">[</span><span class="n">json_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_key_list</span>
     
-    <span class="k">return</span> <span class="n">new_key_values_dict</span>
+    <span class="c1"># replace the json-key-list for each of the new data-keys found to have multi-dot keys</span>
+    <span class="k">for</span> <span class="n">new_key</span><span class="p">,</span> <span class="n">new_keys_list</span> <span class="ow">in</span> <span class="n">new_key_values_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">json_keys_config_dict</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_keys_list</span>
+        
+    <span class="k">return</span> <span class="n">json_keys_config_dict</span>
+
 
 <span class="k">def</span> <span class="nf">args_dict_to_filledin_json</span><span class="p">(</span><span class="n">args_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;&quot; return_code = args_dict_to_filledin_json( args_dict )</span>
@@ -13836,6 +13901,16 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="full_germline_wdl_output"></a></p>
+<h2 id="Full-Germline-workflow-output-from-config-files-and-template.json">Full Germline workflow output from config files and template.json<a class="anchor-link" href="#Full-Germline-workflow-output-from-config-files-and-template.json">&#182;</a></h2><p><a href="#iforge_test_header">iforge dotty-name insertion test</a> <br>
+<a href="#top">Top</a> <br></p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
@@ -13856,17 +13931,13 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;i&#39;</span><span class="p">:</span> <span class="n">input_file_list</span><span class="p">,</span> <span class="s1">&#39;jsonTemplate&#39;</span><span class="p">:</span> <span class="n">json_template_file</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">:</span> <span class="n">output_file</span><span class="p">}</span>
 <span class="n">filled_in_dict</span> <span class="o">=</span> <span class="n">args_dict_to_filledin_json</span><span class="p">(</span> <span class="n">args_dict</span> <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">len(filled_in_dict) = </span><span class="si">%i</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filled_in_dict</span><span class="p">)))</span>
+<span class="n">write_json_file</span><span class="p">(</span><span class="n">filled_in_dict</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">filled_in_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">vl</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">vl</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        
-    <span class="nb">print</span><span class="p">()</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13883,342 +13954,351 @@ Result of Algorithm == json file == local_args_dict_to_filledin_json
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>
-len(filled_in_dict) = 166
+<pre>{
 
-GermlineMasterWF.bqsr.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DAB.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.DAB.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DAB.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.merge.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DAB.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.trimseq.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DAB.DeliveryAlignment_Script&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/deliver_alignment.sh&#34;,
 
-GermlineMasterWF.realign.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DAB.DeliveryFolder_Alignment&#34;: &#34;/projects/bioinformatics/DEL/zzTestGermline/Delivery/Alignment_FirstTest&#34;,
 
-GermlineMasterWF.haplotype.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DAB.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.dedup.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DAB.WorkflowJson&#34;: &#34;/projects/bioinformatics/jallen17/Jsons/GermlineMasterWorkflow.FilledIn.json&#34;,
 
-GermlineMasterWF.DHVC.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DHVC.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.vqsr.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DHVC.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.align.SampleName : benchmarking_test
+    &#34;GermlineMasterWF.DHVC.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.align.PlatformUnit : FLOWCELL_BARCODE.LANE1.SAMPLE_BARCODE,FLOWCELL_BARCODE.LANE2.SAMPLE_BARCODE
+    &#34;GermlineMasterWF.DHVC.DeliveryFolder_HaplotyperVC&#34;: &#34;/projects/bioinformatics/DEL/zzTestGermline/Delivery/HaplotyperVC_FirstTest&#34;,
 
-GermlineMasterWF.NormalInputReads :
-[&#39;/projects/bioinformatics/DEL/Inputs/WGS_chr1_5X_E0.005_L1_read1.fastq.gz&#39;, &#39;/projects/bioinformatics/DEL/Inputs/WGS_chr1_5X_E0.005_L1_read2.fastq.gz&#39;]
+    &#34;GermlineMasterWF.DHVC.DeliveryHaplotyperVC_Script&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/deliver_haplotyperVC.sh&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.TrimHardMemLimit : 100G
+    &#34;GermlineMasterWF.DHVC.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimHardMemLimit : 100G
+    &#34;GermlineMasterWF.DHVC.WorkflowJson&#34;: &#34;/projects/bioinformatics/jallen17/Jsons/GermlineMasterWorkflow.FilledIn.json&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimSoftMemLimit : 100G
+    &#34;GermlineMasterWF.MarkDuplicates&#34;: &#34;true&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.TrimSoftMemLimit : 100G
+    &#34;GermlineMasterWF.NormalInputReads&#34;: [
 
-GermlineMasterWF.align.ALIGN_single.AlignHardMemLimit : 100G
+        [
 
-GermlineMasterWF.align.ALIGN_paired.AlignHardMemLimit : 100G
+            &#34;/projects/bioinformatics/DEL/Inputs/WGS_chr1_5X_E0.005_L1_read1.fastq.gz&#34;,
 
-GermlineMasterWF.align.ALIGN_single.AlignSoftMemLimit : 100G
+            &#34;/projects/bioinformatics/DEL/Inputs/WGS_chr1_5X_E0.005_L1_read2.fastq.gz&#34;
 
-GermlineMasterWF.align.ALIGN_paired.AlignSoftMemLimit : 100G
+        ]
 
-GermlineMasterWF.dedup.DedupHardMemLimit : 100G
+    ],
 
-GermlineMasterWF.dedup.DedupSoftMemLimit : 100G
+    &#34;GermlineMasterWF.RunBqsr&#34;: &#34;false&#34;,
 
-GermlineMasterWF.merge.MergeHardMemLimit : 100G
+    &#34;GermlineMasterWF.Trimming&#34;: &#34;true&#34;,
 
-GermlineMasterWF.merge.MergeSoftMemLimit : 100G
+    &#34;GermlineMasterWF.Vqsr&#34;: &#34;false&#34;,
 
-GermlineMasterWF.realign.RealignHardMemLimit : 100G
+    &#34;GermlineMasterWF.align.ALIGN_paired.AlignEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/AlignEnvProfile.file&#34;,
 
-GermlineMasterWF.realign.RealignSoftMemLimit : 100G
+    &#34;GermlineMasterWF.align.ALIGN_paired.AlignHardMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.bqsr.BqsrHardMemLimit : 100G
+    &#34;GermlineMasterWF.align.ALIGN_paired.AlignSoftMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.bqsr.BqsrSoftMemLimit : 100G
+    &#34;GermlineMasterWF.align.ALIGN_paired.AlignmentScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/alignment.sh&#34;,
 
-GermlineMasterWF.vqsr.VqsrHardMemLimit : 100G
+    &#34;GermlineMasterWF.align.ALIGN_paired.BWAExtraOptionsString&#34;: &#34;\&#34;&#39;-M&#39;\&#34;&#34;,
 
-GermlineMasterWF.vqsr.VqsrSoftMemLimit : 100G
+    &#34;GermlineMasterWF.align.ALIGN_paired.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.haplotype.HaplotyperHardMemLimit : 100G
+    &#34;GermlineMasterWF.align.ALIGN_paired.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.haplotype.HaplotyperSoftMemLimit : 100G
+    &#34;GermlineMasterWF.align.ALIGN_paired.CenterName&#34;: &#34;some_seq_center&#34;,
 
-GermlineMasterWF.bqsr.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.ChunkSizeInBases&#34;: &#34;10000000&#34;,
 
-GermlineMasterWF.dedup.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.realign.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.Library&#34;: &#34;fake_lib&#34;,
 
-GermlineMasterWF.DAB.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.PairedEnd&#34;: &#34;true&#34;,
 
-GermlineMasterWF.haplotype.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.Platform&#34;: &#34;ILLUMINA&#34;,
 
-GermlineMasterWF.align.ALIGN_single.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.Ref&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta&#34;,
 
-GermlineMasterWF.DHVC.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.RefAmb&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.amb&#34;,
 
-GermlineMasterWF.vqsr.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.RefAnn&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.ann&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.RefBwt&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.bwt&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.RefPac&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.pac&#34;,
 
-GermlineMasterWF.merge.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.RefSa&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.sa&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.DebugMode : -d
+    &#34;GermlineMasterWF.align.ALIGN_paired.Sentieon&#34;: &#34;/usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.PairedEnd : true
+    &#34;GermlineMasterWF.align.ALIGN_paired.SentieonThreads&#34;: &#34;40&#34;,
 
-GermlineMasterWF.trimseq.PairedEnd : true
+    &#34;GermlineMasterWF.align.ALIGN_single.AlignEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/AlignEnvProfile.file&#34;,
 
-GermlineMasterWF.align.ALIGN_single.PairedEnd : true
+    &#34;GermlineMasterWF.align.ALIGN_single.AlignHardMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.align.PairedEnd : true
+    &#34;GermlineMasterWF.align.ALIGN_single.AlignSoftMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.PairedEnd : true
+    &#34;GermlineMasterWF.align.ALIGN_single.AlignmentScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/alignment.sh&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.PairedEnd : true
+    &#34;GermlineMasterWF.align.ALIGN_single.BWAExtraOptionsString&#34;: &#34;\&#34;&#39;-M&#39;\&#34;&#34;,
 
-GermlineMasterWF.Trimming : true
+    &#34;GermlineMasterWF.align.ALIGN_single.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.MarkDuplicates : true
+    &#34;GermlineMasterWF.align.ALIGN_single.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.RunBqsr : false
+    &#34;GermlineMasterWF.align.ALIGN_single.CenterName&#34;: &#34;some_seq_center&#34;,
 
-GermlineMasterWF.Vqsr : false
+    &#34;GermlineMasterWF.align.ALIGN_single.ChunkSizeInBases&#34;: &#34;10000000&#34;,
 
-GermlineMasterWF.bqsr.ProduceRecalBam : false
+    &#34;GermlineMasterWF.align.ALIGN_single.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.Adapters : /projects/bioinformatics/jallen17/Inputs/TruSeqAdaptors.fasta
+    &#34;GermlineMasterWF.align.ALIGN_single.Library&#34;: &#34;fake_lib&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.Adapters : /projects/bioinformatics/jallen17/Inputs/TruSeqAdaptors.fasta
+    &#34;GermlineMasterWF.align.ALIGN_single.PairedEnd&#34;: &#34;true&#34;,
 
-GermlineMasterWF.bqsr.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+    &#34;GermlineMasterWF.align.ALIGN_single.Platform&#34;: &#34;ILLUMINA&#34;,
 
-GermlineMasterWF.haplotype.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+    &#34;GermlineMasterWF.align.ALIGN_single.Ref&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta&#34;,
 
-GermlineMasterWF.vqsr.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+    &#34;GermlineMasterWF.align.ALIGN_single.RefAmb&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.amb&#34;,
 
-GermlineMasterWF.realign.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+    &#34;GermlineMasterWF.align.ALIGN_single.RefAnn&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.ann&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+    &#34;GermlineMasterWF.align.ALIGN_single.RefBwt&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.bwt&#34;,
 
-GermlineMasterWF.align.ALIGN_single.Ref : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta
+    &#34;GermlineMasterWF.align.ALIGN_single.RefPac&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.pac&#34;,
 
-GermlineMasterWF.align.ALIGN_single.RefAnn : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.ann
+    &#34;GermlineMasterWF.align.ALIGN_single.RefSa&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.sa&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.RefAnn : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.ann
+    &#34;GermlineMasterWF.align.ALIGN_single.Sentieon&#34;: &#34;/usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.RefSa : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.sa
+    &#34;GermlineMasterWF.align.ALIGN_single.SentieonThreads&#34;: &#34;40&#34;,
 
-GermlineMasterWF.align.ALIGN_single.RefSa : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.sa
+    &#34;GermlineMasterWF.align.PairedEnd&#34;: &#34;true&#34;,
 
-GermlineMasterWF.align.ALIGN_single.RefBwt : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.bwt
+    &#34;GermlineMasterWF.align.PlatformUnit&#34;: &#34;FLOWCELL_BARCODE.LANE1.SAMPLE_BARCODE,FLOWCELL_BARCODE.LANE2.SAMPLE_BARCODE&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.RefBwt : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.bwt
+    &#34;GermlineMasterWF.align.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.RefPac : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.pac
+    &#34;GermlineMasterWF.bqsr.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.align.ALIGN_single.RefPac : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.pac
+    &#34;GermlineMasterWF.bqsr.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.align.ALIGN_single.RefAmb : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.amb
+    &#34;GermlineMasterWF.bqsr.BqsrEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/BqsrEnvProfile.file&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.RefAmb : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.amb
+    &#34;GermlineMasterWF.bqsr.BqsrHardMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.haplotype.RefFai : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai
+    &#34;GermlineMasterWF.bqsr.BqsrKnownSites&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Mills_and_1000G_gold_standard.indels.hg38.vcf,/projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf&#34;,
 
-GermlineMasterWF.realign.RefFai : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai
+    &#34;GermlineMasterWF.bqsr.BqsrScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/bqsr.sh&#34;,
 
-GermlineMasterWF.bqsr.RefFai : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai
+    &#34;GermlineMasterWF.bqsr.BqsrSoftMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.vqsr.RefFai : /projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai
+    &#34;GermlineMasterWF.bqsr.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.Platform : ILLUMINA
+    &#34;GermlineMasterWF.bqsr.ProduceRecalBam&#34;: &#34;false&#34;,
 
-GermlineMasterWF.align.ALIGN_single.Platform : ILLUMINA
+    &#34;GermlineMasterWF.bqsr.Ref&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.Library : fake_lib
+    &#34;GermlineMasterWF.bqsr.RefFai&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai&#34;,
 
-GermlineMasterWF.align.ALIGN_single.Library : fake_lib
+    &#34;GermlineMasterWF.bqsr.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.CenterName : some_seq_center
+    &#34;GermlineMasterWF.bqsr.Sentieon&#34;: &#34;/usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01&#34;,
 
-GermlineMasterWF.align.ALIGN_single.CenterName : some_seq_center
+    &#34;GermlineMasterWF.bqsr.SentieonThreads&#34;: &#34;40&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.ChunkSizeInBases : 10000000
+    &#34;GermlineMasterWF.dedup.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.align.ALIGN_single.ChunkSizeInBases : 10000000
+    &#34;GermlineMasterWF.dedup.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.BWAExtraOptionsString : &#34;&#39;-M&#39;&#34;
+    &#34;GermlineMasterWF.dedup.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.align.ALIGN_single.BWAExtraOptionsString : &#34;&#39;-M&#39;&#34;
+    &#34;GermlineMasterWF.dedup.DedupEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/DedupEnvProfile.file&#34;,
 
-GermlineMasterWF.bqsr.BqsrKnownSites : /projects/bioinformatics/jallen17/Reference/Mills_and_1000G_gold_standard.indels.hg38.vcf,/projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf
+    &#34;GermlineMasterWF.dedup.DedupHardMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.realign.RealignmentKnownSites : /projects/bioinformatics/jallen17/Reference/Mills_and_1000G_gold_standard.indels.hg38.vcf
+    &#34;GermlineMasterWF.dedup.DedupScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/dedup.sh&#34;,
 
-GermlineMasterWF.haplotype.DBSNP : /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf
+    &#34;GermlineMasterWF.dedup.DedupSoftMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.haplotype.DBSNPIdx : /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf.idx
+    &#34;GermlineMasterWF.dedup.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.haplotype.HaplotyperExtraOptionsString : &#34;&#39; &#39;&#34;
+    &#34;GermlineMasterWF.dedup.Sentieon&#34;: &#34;/usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01&#34;,
 
-GermlineMasterWF.vqsr.VqsrSnpResourceString : &#34;&#39;--resource /projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource_param 1000G,known=false,training=true,truth=false,prior=10.0 --resource /projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/1000G_omni2.5.hg38.vcf.gz --resource_param omni,known=false,training=true,truth=false,prior=12.0 --resource /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf --resource_param dbsnp,known=true,training=false,truth=false,prior=2.0 --resource /projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/hapmap_3.3.hg38.vcf.gz --resource_param hapmap,known=false,training=true,truth=true,prior=15.0&#39;&#34;
+    &#34;GermlineMasterWF.dedup.SentieonThreads&#34;: &#34;40&#34;,
 
-GermlineMasterWF.vqsr.VqsrIndelResourceString : &#34;&#39;--resource /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf --resource_param dbsnp,known=true,training=false,truth=false,prior=2.0 --resource /projects/bioinformatics/jallen17/Reference/Mills_and_1000G_gold_standard.indels.hg38.vcf --resource_param Mills,known=false,training=true,truth=true,prior=12.0&#39;&#34;
+    &#34;GermlineMasterWF.haplotype.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.vqsr.AnnotateText : &#34;&#39;--annotation DP --annotation QD --annotation FS --annotation SOR --annotation MQ --annotation MQRankSum --annotation ReadPosRankSum&#39;&#34;
+    &#34;GermlineMasterWF.haplotype.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.DAB.DeliveryFolder_Alignment : /projects/bioinformatics/DEL/zzTestGermline/Delivery/Alignment_FirstTest
+    &#34;GermlineMasterWF.haplotype.DBSNP&#34;: &#34;/projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf&#34;,
 
-GermlineMasterWF.DHVC.DeliveryFolder_HaplotyperVC : /projects/bioinformatics/DEL/zzTestGermline/Delivery/HaplotyperVC_FirstTest
+    &#34;GermlineMasterWF.haplotype.DBSNPIdx&#34;: &#34;/projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf.idx&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.CutAdapt : /usr/local/apps/bioapps/python/Python-3.6.1/bin
+    &#34;GermlineMasterWF.haplotype.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.CutAdapt : /usr/local/apps/bioapps/python/Python-3.6.1/bin
+    &#34;GermlineMasterWF.haplotype.HaplotyperEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/HaplotyperEnvProfile.file&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimSeqScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/trim_sequences.sh
+    &#34;GermlineMasterWF.haplotype.HaplotyperExtraOptionsString&#34;: &#34;\&#34;&#39; &#39;\&#34;&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.TrimSeqScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/trim_sequences.sh
+    &#34;GermlineMasterWF.haplotype.HaplotyperHardMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.CutAdaptThreads : 8
+    &#34;GermlineMasterWF.haplotype.HaplotyperScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/haplotyper.sh&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.CutAdaptThreads : 8
+    &#34;GermlineMasterWF.haplotype.HaplotyperSoftMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+    &#34;GermlineMasterWF.haplotype.HaplotyperVCFSourceField&#34;: &#34;/projects/bioinformatics/jallen17/Config/HaplotyperVCFSourceField.file&#34;,
 
-GermlineMasterWF.dedup.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+    &#34;GermlineMasterWF.haplotype.Ref&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta&#34;,
 
-GermlineMasterWF.align.ALIGN_single.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+    &#34;GermlineMasterWF.haplotype.RefFai&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai&#34;,
 
-GermlineMasterWF.realign.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+    &#34;GermlineMasterWF.haplotype.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.bqsr.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+    &#34;GermlineMasterWF.haplotype.Sentieon&#34;: &#34;/usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01&#34;,
 
-GermlineMasterWF.haplotype.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+    &#34;GermlineMasterWF.haplotype.SentieonThreads&#34;: &#34;40&#34;,
 
-GermlineMasterWF.vqsr.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+    &#34;GermlineMasterWF.merge.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.merge.Sentieon : /usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01
+    &#34;GermlineMasterWF.merge.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.dedup.SentieonThreads : 40
+    &#34;GermlineMasterWF.merge.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.bqsr.SentieonThreads : 40
+    &#34;GermlineMasterWF.merge.MergeBamEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/MergeBamEnvProfile.file&#34;,
 
-GermlineMasterWF.realign.SentieonThreads : 40
+    &#34;GermlineMasterWF.merge.MergeBamScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/merge_bams.sh&#34;,
 
-GermlineMasterWF.vqsr.SentieonThreads : 40
+    &#34;GermlineMasterWF.merge.MergeHardMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.align.ALIGN_single.SentieonThreads : 40
+    &#34;GermlineMasterWF.merge.MergeSoftMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.merge.SentieonThreads : 40
+    &#34;GermlineMasterWF.merge.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.haplotype.SentieonThreads : 40
+    &#34;GermlineMasterWF.merge.Sentieon&#34;: &#34;/usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.SentieonThreads : 40
+    &#34;GermlineMasterWF.merge.SentieonThreads&#34;: &#34;40&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.bqsr.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.RealignEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/RealignEnvProfile.file&#34;,
 
-GermlineMasterWF.haplotype.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.RealignHardMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.DAB.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.RealignSoftMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.realign.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.RealignmentKnownSites&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Mills_and_1000G_gold_standard.indels.hg38.vcf&#34;,
 
-GermlineMasterWF.vqsr.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.RealignmentScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/realignment.sh&#34;,
 
-GermlineMasterWF.align.ALIGN_single.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.Ref&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta&#34;,
 
-GermlineMasterWF.dedup.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.RefFai&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai&#34;,
 
-GermlineMasterWF.DHVC.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.merge.BashSharedFunctions : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh
+    &#34;GermlineMasterWF.realign.Sentieon&#34;: &#34;/usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01&#34;,
 
-GermlineMasterWF.dedup.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.realign.SentieonThreads&#34;: &#34;40&#34;,
 
-GermlineMasterWF.DHVC.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.PairedEnd&#34;: &#34;true&#34;,
 
-GermlineMasterWF.align.ALIGN_single.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.haplotype.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.Adapters&#34;: &#34;/projects/bioinformatics/jallen17/Inputs/TruSeqAdaptors.fasta&#34;,
 
-GermlineMasterWF.merge.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.realign.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.CutAdapt&#34;: &#34;/usr/local/apps/bioapps/python/Python-3.6.1/bin&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.CutAdaptThreads&#34;: &#34;8&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.bqsr.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.PairedEnd&#34;: &#34;true&#34;,
 
-GermlineMasterWF.vqsr.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/TrimEnvProfile.file&#34;,
 
-GermlineMasterWF.DAB.BashPreamble : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimHardMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.AlignmentScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/alignment.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimSeqScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/trim_sequences.sh&#34;,
 
-GermlineMasterWF.align.ALIGN_single.AlignmentScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/alignment.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimSoftMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.dedup.DedupScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/dedup.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.Adapters&#34;: &#34;/projects/bioinformatics/jallen17/Inputs/TruSeqAdaptors.fasta&#34;,
 
-GermlineMasterWF.realign.RealignmentScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/realignment.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.bqsr.BqsrScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/bqsr.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.haplotype.HaplotyperScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/haplotyper.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.CutAdapt&#34;: &#34;/usr/local/apps/bioapps/python/Python-3.6.1/bin&#34;,
 
-GermlineMasterWF.vqsr.VqsrScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/vqsr.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.CutAdaptThreads&#34;: &#34;8&#34;,
 
-GermlineMasterWF.DAB.DeliveryAlignment_Script : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/deliver_alignment.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.merge.MergeBamScript : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/merge_bams.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.PairedEnd&#34;: &#34;true&#34;,
 
-GermlineMasterWF.DHVC.DeliveryHaplotyperVC_Script : /projects/bioinformatics/jallen17/MayomicsVC/src/shell/deliver_haplotyperVC.sh
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.TrimEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/TrimEnvProfile.file&#34;,
 
-GermlineMasterWF.DHVC.WorkflowJson : /projects/bioinformatics/jallen17/Jsons/GermlineMasterWorkflow.FilledIn.json
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.TrimHardMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.DAB.WorkflowJson : /projects/bioinformatics/jallen17/Jsons/GermlineMasterWorkflow.FilledIn.json
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.TrimSeqScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/trim_sequences.sh&#34;,
 
-GermlineMasterWF.align.ALIGN_paired.AlignEnvProfile : /projects/bioinformatics/jallen17/Config/AlignEnvProfile.file
+    &#34;GermlineMasterWF.trimseq.TRIMSEQ_single.TrimSoftMemLimit&#34;: &#34;100G&#34;,
 
-GermlineMasterWF.align.ALIGN_single.AlignEnvProfile : /projects/bioinformatics/jallen17/Config/AlignEnvProfile.file
+    &#34;GermlineMasterWF.vqsr.AnnotateText&#34;: &#34;\&#34;&#39;--annotation DP --annotation QD --annotation FS --annotation SOR --annotation MQ --annotation MQRankSum --annotation ReadPosRankSum&#39;\&#34;&#34;,
 
-GermlineMasterWF.merge.MergeBamEnvProfile : /projects/bioinformatics/jallen17/Config/MergeBamEnvProfile.file
+    &#34;GermlineMasterWF.vqsr.BashPreamble&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shell_preamble.sh&#34;,
 
-GermlineMasterWF.dedup.DedupEnvProfile : /projects/bioinformatics/jallen17/Config/DedupEnvProfile.file
+    &#34;GermlineMasterWF.vqsr.BashSharedFunctions&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/shared_functions.sh&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_single.TrimEnvProfile : /projects/bioinformatics/jallen17/Config/TrimEnvProfile.file
+    &#34;GermlineMasterWF.vqsr.DebugMode&#34;: &#34;-d&#34;,
 
-GermlineMasterWF.trimseq.TRIMSEQ_paired.TrimEnvProfile : /projects/bioinformatics/jallen17/Config/TrimEnvProfile.file
+    &#34;GermlineMasterWF.vqsr.Ref&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta&#34;,
 
-GermlineMasterWF.bqsr.BqsrEnvProfile : /projects/bioinformatics/jallen17/Config/BqsrEnvProfile.file
+    &#34;GermlineMasterWF.vqsr.RefFai&#34;: &#34;/projects/bioinformatics/jallen17/Reference/Homo_sapiens_assembly38.fasta.fai&#34;,
 
-GermlineMasterWF.realign.RealignEnvProfile : /projects/bioinformatics/jallen17/Config/RealignEnvProfile.file
+    &#34;GermlineMasterWF.vqsr.SampleName&#34;: &#34;benchmarking_test&#34;,
 
-GermlineMasterWF.haplotype.HaplotyperEnvProfile : /projects/bioinformatics/jallen17/Config/HaplotyperEnvProfile.file
+    &#34;GermlineMasterWF.vqsr.Sentieon&#34;: &#34;/usr/local/apps/bioapps/sentieon/sentieon-genomics-201808.01&#34;,
 
-GermlineMasterWF.haplotype.HaplotyperVCFSourceField : /projects/bioinformatics/jallen17/Config/HaplotyperVCFSourceField.file
+    &#34;GermlineMasterWF.vqsr.SentieonThreads&#34;: &#34;40&#34;,
 
-GermlineMasterWF.vqsr.VqsrEnvProfile : /projects/bioinformatics/jallen17/Config/VqsrEnvProfile.file
+    &#34;GermlineMasterWF.vqsr.VqsrEnvProfile&#34;: &#34;/projects/bioinformatics/jallen17/Config/VqsrEnvProfile.file&#34;,
 
+    &#34;GermlineMasterWF.vqsr.VqsrHardMemLimit&#34;: &#34;100G&#34;,
+
+    &#34;GermlineMasterWF.vqsr.VqsrIndelResourceString&#34;: &#34;\&#34;&#39;--resource /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf --resource_param dbsnp,known=true,training=false,truth=false,prior=2.0 --resource /projects/bioinformatics/jallen17/Reference/Mills_and_1000G_gold_standard.indels.hg38.vcf --resource_param Mills,known=false,training=true,truth=true,prior=12.0&#39;\&#34;&#34;,
+
+    &#34;GermlineMasterWF.vqsr.VqsrScript&#34;: &#34;/projects/bioinformatics/jallen17/MayomicsVC/src/shell/vqsr.sh&#34;,
+
+    &#34;GermlineMasterWF.vqsr.VqsrSnpResourceString&#34;: &#34;\&#34;&#39;--resource /projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/1000G_phase1.snps.high_confidence.hg38.vcf.gz --resource_param 1000G,known=false,training=true,truth=false,prior=10.0 --resource /projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/1000G_omni2.5.hg38.vcf.gz --resource_param omni,known=false,training=true,truth=false,prior=12.0 --resource /projects/bioinformatics/jallen17/Reference/dbsnp_138.hg38.vcf --resource_param dbsnp,known=true,training=false,truth=false,prior=2.0 --resource /projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/hapmap_3.3.hg38.vcf.gz --resource_param hapmap,known=false,training=true,truth=true,prior=15.0&#39;\&#34;&#34;,
+
+    &#34;GermlineMasterWF.vqsr.VqsrSoftMemLimit&#34;: &#34;100G&#34;
+
+}
 </pre>
 </div>
 </div>
@@ -14323,6 +14403,37 @@ bash germline_mkjson.sh . MayomicsVC/src/wdl/GermlineMasterWorkflow.wdl <span cl
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook total run time = </span><span class="si">%0.3f</span><span class="s1"> seconds&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">notebook_start_time</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>notebook total run time = 0.151 seconds
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
