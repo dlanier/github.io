@@ -13120,20 +13120,13 @@ div#notebook {
 <h1 id="Parse-Germline-Workflow-config.txt-array-related-variables-to-config.json">Parse Germline Workflow config.txt array-related variables to config.json<a class="anchor-link" href="#Parse-Germline-Workflow-config.txt-array-related-variables-to-config.json">&#182;</a></h1><ul>
 <li>get the list of all Germline Workflow config-name variables</li>
 <li>get the list of those that are arrays</li>
-<li>comment them the config_*.txt files &amp; move them to json</li>
+<li>comment them the config_*.txt files &amp; move them to json
+##### Note that companion notebooks contain funtionality to deal with multiple config files - duplicate variables, missing or incorrect values</li>
 </ul>
 <hr>
-<h3 id="Historical-links">Historical links<a class="anchor-link" href="#Historical-links">&#182;</a></h3><p><a href="https://git.ncsa.illinois.edu/mayomics/MayomicsVC/blob/dev/src/wdl/Alignment/Workflow/Runtrim_sequences.wdl">WDL Where it is used: NormalInputReads</a> <br>
-<a href="https://wiki.ncsa.illinois.edu/display/MSD/Multilane+support">NCSA Wiki MGC Multilane Support</a> <br></p>
-<hr>
-<h3 id="Page-Section-Links">Page Section Links<a class="anchor-link" href="#Page-Section-Links">&#182;</a></h3><p><a href="#explore_prove">old parser inputs and results - known good outputs</a> <br>
-<a href="#new_code">New Code - functions</a> <br></p>
-<h3 id="Demo-New-Code:">Demo New Code:<a class="anchor-link" href="#Demo-New-Code:">&#182;</a></h3><p><a href="#convert_germline_config_files">convert_germline_config_files</a> <br>
-<a href="#germline_config_dict_to_arrays_dict">germline_config_dict_to_arrays_dict</a> <br>
-<a href="#config_dict_to_lines_with_comments">config_dict_to_lines_with_comments</a> <br></p>
-<hr>
 <h2 id="&quot;NormalInputReads&quot;-aka-&quot;InputReads&quot;-is-a-lanes-array-of-read-arrays.">"NormalInputReads" aka "InputReads" is a lanes-array of read-arrays.<a class="anchor-link" href="#&quot;NormalInputReads&quot;-aka-&quot;InputReads&quot;-is-a-lanes-array-of-read-arrays.">&#182;</a></h2>
-<pre><code>* reads may be single or a pair
+<pre><code>* Current config_parser.py input-output
+* (reads may be single or a pair)
 </code></pre>
 <div class="highlight"><pre><span></span><span class="c1"># config file entries:</span>
 <span class="n">InputRead1</span> <span class="o">=</span> <span class="s2">&quot;lane_1_R1.fasta, lane_1_R2.fasta&quot;</span>
@@ -13145,6 +13138,40 @@ div#notebook {
     <span class="s2">&quot;NormalInputReads&quot;</span>: <span class="o">[[</span><span class="s2">&quot;lane_1_R1.fasta&quot;</span>, <span class="s2">&quot;lane_1_R2.fasta&quot;</span><span class="o">]</span>, <span class="o">[</span><span class="s2">&quot;lane_2_R1.fasta&quot;</span>, <span class="s2">&quot;lane_2_R2.fasta&quot;</span><span class="o">]]</span>
 <span class="o">}</span>
 </pre></div>
+<hr>
+<h3 id="Historical-links---Current-config_parser.py-code-and-wiki-page">Historical links - Current config_parser.py code and wiki page<a class="anchor-link" href="#Historical-links---Current-config_parser.py-code-and-wiki-page">&#182;</a></h3><p><a href="https://git.ncsa.illinois.edu/mayomics/MayomicsVC/blob/dev/src/wdl/Alignment/Workflow/Runtrim_sequences.wdl">WDL Where it is used: NormalInputReads</a> <br>
+<a href="https://wiki.ncsa.illinois.edu/display/MSD/Multilane+support">NCSA Wiki MGC Multilane Support</a> <br></p>
+<hr>
+<h3 id="Development-Page-Section-Links">Development Page Section Links<a class="anchor-link" href="#Development-Page-Section-Links">&#182;</a></h3><p><a href="#explore_prove">Examine old parser inputs and results - known good outputs</a> <br></p>
+
+<pre><code>* Read inputs and outpus from run on iforge
+</code></pre>
+<p><a href="#new_code">New Code Cell - function prototypes for conversion task</a> <br></p>
+
+<pre><code>* Local notebook code
+</code></pre>
+<hr>
+<h3 id="Demo-New-Code:">Demo New Code:<a class="anchor-link" href="#Demo-New-Code:">&#182;</a></h3><p><a href="#convert_germline_config_files">Convert_germline_config_files</a> <br></p>
+
+<pre><code>* This function calls the next two
+* Read each config file and extract the array variables to an arrays dict
+* Over-write the config file with the array variables commented
+* Write the ".json" file of array variables
+</code></pre>
+<p><a href="#germline_config_dict_to_arrays_dict">Germline_config_dict_to_arrays_dict</a> <br></p>
+
+<pre><code>* NOTE: Hard-Coded germline-specific function (may also work with legacy workflow wdl)
+* Get the array values specific to germline workflow as a dict (for writing the json output)
+</code></pre>
+<p><a href="#config_dict_to_lines_with_comments">Config_dict_to_lines_with_comments</a> <br></p>
+
+<pre><code>* Insert comments and convert the config dict to a writable string
+* Allows convert_germline_config_files to write-back the config file with comments
+</code></pre>
+<hr>
+<h4 id="notebook-convenience-function">notebook convenience function<a class="anchor-link" href="#notebook-convenience-function">&#182;</a></h4><p><a href="#get_template_json_array_varaibles_config_names_list">get_template_json_array_varaibles_config_names_list</a> <br></p>
+
+<pre><code>* get the list of arrays found in the json template file</code></pre>
 
 </div>
 </div>
@@ -13357,6 +13384,17 @@ True sample_info.txt
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">convert_germline_config_files</span><span class="p">(</span><span class="n">config_data_dir</span><span class="p">,</span> <span class="n">config_files_list</span><span class="p">,</span> <span class="n">DOWRITE</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; all_arrays_dict = convert_germline_config_files(config_data_dir, config_files_list) </span>
+<span class="sd">    </span>
+<span class="sd">    Note: usage assumptions here - using the same directory as input to write back and write json</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        config_data_dir:    directory location of the next variable - config_files_list</span>
+<span class="sd">        config_files_list:  list of files in the config dir  (usage assumption here)</span>
+<span class="sd">        DOWRITE:            actually write the files if true (development convenience)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        all_arrays_dict:    dict of arrays - the variables named as array types in the template</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">all_arrays_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">conf_file_name</span> <span class="ow">in</span> <span class="n">config_files_list</span><span class="p">:</span>
@@ -13389,6 +13427,10 @@ True sample_info.txt
 <span class="k">def</span> <span class="nf">germline_config_dict_to_arrays_dict</span><span class="p">(</span><span class="n">germline_config_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; arrays_dict = germline_config_dict_to_arrays_dict(germline_config_dict) </span>
 <span class="sd">    Note: HERE is the place to add variable names to move in the above function</span>
+<span class="sd">    Args:</span>
+<span class="sd">        germline_config_dict:   config_whatever.txt as a python dict</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        arrays_dict:            keys are config file variable names, values are arrays</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">arrays_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">input_reads_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NormalInputRead1&#39;</span><span class="p">,</span> <span class="s1">&#39;NormalInputRead2&#39;</span><span class="p">]</span>
@@ -13414,6 +13456,16 @@ True sample_info.txt
             <span class="n">config_dict_string</span> <span class="o">=</span> <span class="n">config_dict_string</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">=</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
                     
     <span class="k">return</span> <span class="n">config_dict_string</span>
+
+<span class="k">def</span> <span class="nf">get_template_json_array_varaibles_config_names_list</span><span class="p">(</span><span class="n">template_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; get the list of all array variables in the workflow_template.json (file as dict) &quot;&quot;&quot;</span>
+    <span class="n">arrays_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">template_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;Array&#39;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+            <span class="n">arrays_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">config_keys_dict</span> <span class="o">=</span> <span class="n">get_json_keys_config_dict</span><span class="p">(</span><span class="n">arrays_dict</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">config_keys_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 </pre></div>
 
     </div>
@@ -13439,7 +13491,8 @@ True sample_info.txt
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># config_data_dir = &#39;/Users/mojo/zzIForge/May16Config/&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#                                           Defined at top</span>
+<span class="c1"># config_data_dir = &#39;/Users/mojo/zzIForge/May16Config/&#39;</span>
 <span class="c1"># config_files_list = [&#39;memory_info.txt&#39;, &#39;run_info.txt&#39;, &#39;tool_info.txt&#39;, &#39;sample_info.txt&#39;]</span>
 
 <span class="n">all_arrays_dict</span> <span class="o">=</span> <span class="n">convert_germline_config_files</span><span class="p">(</span><span class="n">config_data_dir</span><span class="p">,</span> <span class="n">config_files_list</span><span class="p">)</span>
@@ -13496,7 +13549,11 @@ PlatformUnit [&#39;FLOWCELL_BARCODE.LANE.SAMPLE_BARCODE&#39;, &#39;FLOWCELL_BARC
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">germline_config_dict</span> <span class="o">=</span> <span class="n">get_config_text_as_dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_data_dir</span><span class="p">,</span> <span class="s1">&#39;run_info.txt&#39;</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#                                           Defined at top</span>
+<span class="c1"># config_data_dir = &#39;/Users/mojo/zzIForge/May16Config/&#39;</span>
+<span class="c1"># config_files_list = [&#39;memory_info.txt&#39;, &#39;run_info.txt&#39;, &#39;tool_info.txt&#39;, &#39;sample_info.txt&#39;]</span>
+
+<span class="n">germline_config_dict</span> <span class="o">=</span> <span class="n">get_config_text_as_dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_data_dir</span><span class="p">,</span> <span class="s1">&#39;run_info.txt&#39;</span><span class="p">))</span>
 <span class="n">arrays_dict</span> <span class="o">=</span> <span class="n">germline_config_dict_to_arrays_dict</span><span class="p">(</span><span class="n">germline_config_dict</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">arrays_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -13545,7 +13602,11 @@ PlatformUnit [&#39;FLOWCELL_BARCODE.LANE.SAMPLE_BARCODE&#39;, &#39;FLOWCELL_BARC
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">config_dict</span> <span class="o">=</span> <span class="n">get_config_text_as_dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_data_dir</span><span class="p">,</span> <span class="s1">&#39;run_info.txt&#39;</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#                                           Defined at top</span>
+<span class="c1"># config_data_dir = &#39;/Users/mojo/zzIForge/May16Config/&#39;</span>
+<span class="c1"># config_files_list = [&#39;memory_info.txt&#39;, &#39;run_info.txt&#39;, &#39;tool_info.txt&#39;, &#39;sample_info.txt&#39;]</span>
+
+<span class="n">config_dict</span> <span class="o">=</span> <span class="n">get_config_text_as_dict</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config_data_dir</span><span class="p">,</span> <span class="s1">&#39;run_info.txt&#39;</span><span class="p">))</span>
 <span class="n">out_file_name</span> <span class="o">=</span> <span class="s1">&#39;dummy.txt&#39;</span>
 <span class="n">comment_keys_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Trimming&#39;</span><span class="p">,</span> <span class="s1">&#39;MantaThreads&#39;</span><span class="p">,</span> <span class="s1">&#39;DeliveryFolder_HaplotyperVC&#39;</span><span class="p">]</span>
 
@@ -13602,6 +13663,63 @@ AnnotateText=&#34;&#34;&#39;--annotation DP --annotation QD --annotation FS --an
 DeliveryFolder_Alignment=&#34;/projects/bioinformatics/DEL/Delivery/Alignment&#34;
 # DeliveryFolder_HaplotyperVC=&#34;/projects/bioinformatics/DEL/Delivery/HaplotyperVC&#34;
 
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="get_template_json_array_varaibles_config_names_list"></a></p>
+<h3 id="get-template-json-array-varaibles-config-names_list">get template json array varaibles config names_list<a class="anchor-link" href="#get-template-json-array-varaibles-config-names_list">&#182;</a></h3>
+<pre><code>* get the list of arrays found in the json template file
+</code></pre>
+<p><a href="#top">Top</a> <br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#                                           Defined at top</span>
+<span class="c1"># json_data_dir = &#39;/Users/mojo/zzIForge/May16Jsons/&#39;</span>
+<span class="c1"># json_template_filename = &#39;GermlineMasterWorkflow.template.json&#39;</span>
+<span class="c1"># json_filledin_filename = &#39;GermlineMasterWorkflow.FilledIn.json&#39;</span>
+
+<span class="n">template_dict</span> <span class="o">=</span> <span class="n">read_json_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">json_data_dir</span><span class="p">,</span> <span class="n">json_template_filename</span><span class="p">))</span>
+
+<span class="n">arrays_list</span> <span class="o">=</span> <span class="n">get_template_json_array_varaibles_config_names_list</span><span class="p">(</span><span class="n">template_dict</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Names of array variables in&#39;</span><span class="p">,</span> <span class="n">json_template_filename</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">arr_name</span> <span class="ow">in</span> <span class="n">arrays_list</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">arr_name</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Names of array variables in GermlineMasterWorkflow.template.json 
+
+	 NormalInputReads
+	 PlatformUnit
 </pre>
 </div>
 </div>
