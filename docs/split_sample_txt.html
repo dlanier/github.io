@@ -13134,7 +13134,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">mystry_file_2_json_str</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">paired_end</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -13153,13 +13153,13 @@ div#notebook {
         <span class="n">json_list_str</span> <span class="o">=</span> <span class="s1">&#39;[&#39;</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">str_list</span><span class="p">)):</span>
             <span class="n">json_list_str</span> <span class="o">+=</span> <span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&quot;, &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">str_list</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-        <span class="n">json_list_str</span> <span class="o">=</span> <span class="n">json_list_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;],</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="n">json_list_str</span> <span class="o">=</span> <span class="n">json_list_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;],</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">json_list_str</span>
 
     <span class="k">def</span> <span class="nf">paired_list_2_json_str</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
         <span class="n">json_list_str</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="se">\n</span><span class="s1">&#39;</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">str_list</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="n">json_list_str</span> <span class="o">+=</span> <span class="n">INSET_BY_2_STR</span> <span class="o">+</span> <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">],</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">str_list</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">str_list</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">json_list_str</span> <span class="o">+=</span> <span class="n">INSET_BY_2_STR</span> <span class="o">+</span> <span class="s1">&#39;[&quot;</span><span class="si">%s</span><span class="s1">&quot;, &quot;</span><span class="si">%s</span><span class="s1">&quot;],</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">str_list</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">str_list</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">json_list_str</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">INSET_BY_2_STR</span> <span class="o">+</span> <span class="s1">&#39;],</span><span class="se">\n</span><span class="s1">&#39;</span>
 
     <span class="k">def</span> <span class="nf">get_jason_variable_str</span><span class="p">(</span><span class="n">var_name_str</span><span class="p">):</span>
@@ -13224,88 +13224,75 @@ div#notebook {
 <pre>PairedEnd_MultiLane.txt
 {
     &#34;sampleA&#34;: [
-        [sampleA.L1.R1.fastq.gz, sampleA.L1.R2.fastq.gz],
-        [sampleA.L1.R2.fastq.gz, sampleA.L2.R1.fastq.gz],
-        [sampleA.L2.R1.fastq.gz, sampleA.L2.R2.fastq.gz]
+        [&#34;sampleA.L1.R1.fastq.gz&#34;, &#34;sampleA.L1.R2.fastq.gz&#34;],
+        [&#34;sampleA.L1.R2.fastq.gz&#34;, &#34;sampleA.L2.R1.fastq.gz&#34;],
+        [&#34;sampleA.L2.R1.fastq.gz&#34;, &#34;sampleA.L2.R2.fastq.gz&#34;]
         ],
     &#34;sampleB&#34;: [
-        [sampleB.L1.R1.fastq.gz, sampleB.L1.R2.fastq.gz],
-        [sampleB.L1.R2.fastq.gz, sampleB.L2.R1.fastq.gz],
-        [sampleB.L2.R1.fastq.gz, sampleB.L2.R2.fastq.gz]
+        [&#34;sampleB.L1.R1.fastq.gz&#34;, &#34;sampleB.L1.R2.fastq.gz&#34;],
+        [&#34;sampleB.L1.R2.fastq.gz&#34;, &#34;sampleB.L2.R1.fastq.gz&#34;],
+        [&#34;sampleB.L2.R1.fastq.gz&#34;, &#34;sampleB.L2.R2.fastq.gz&#34;]
         ],
     &#34;sampleC&#34;: [
-        [sampleC.L1.R1.fastq.gz, sampleC.L1.R2.fastq.gz],
-        [sampleC.L1.R2.fastq.gz, sampleC.L2.R1.fastq.gz],
-        [sampleC.L2.R1.fastq.gz, sampleC.L2.R2.fastq.gz]
+        [&#34;sampleC.L1.R1.fastq.gz&#34;, &#34;sampleC.L1.R2.fastq.gz&#34;],
+        [&#34;sampleC.L1.R2.fastq.gz&#34;, &#34;sampleC.L2.R1.fastq.gz&#34;],
+        [&#34;sampleC.L2.R1.fastq.gz&#34;, &#34;sampleC.L2.R2.fastq.gz&#34;]
         ],
     &#34;sampleD&#34;: [
-        [sampleD.L1.R1.fastq.gz, sampleD.L1.R2.fastq.gz],
-        [sampleD.L1.R2.fastq.gz, sampleD.L2.R1.fastq.gz],
-        [sampleD.L2.R1.fastq.gz, sampleD.L2.R2.fastq.gz]
+        [&#34;sampleD.L1.R1.fastq.gz&#34;, &#34;sampleD.L1.R2.fastq.gz&#34;],
+        [&#34;sampleD.L1.R2.fastq.gz&#34;, &#34;sampleD.L2.R1.fastq.gz&#34;],
+        [&#34;sampleD.L2.R1.fastq.gz&#34;, &#34;sampleD.L2.R2.fastq.gz&#34;]
         ]
 }
 
 SingleEnd_SingleLane.txt
 {
-    &#34;sampleA&#34;: [&#34;sampleA.R1.fastq.gz],
-    &#34;sampleB&#34;: [&#34;sampleB.R1.fastq.gz],
-    &#34;sampleC&#34;: [&#34;sampleC.R1.fastq.gz],
-    &#34;sampleD&#34;: [&#34;sampleD.R1.fastq.gz]
+    &#34;sampleA&#34;: [&#34;sampleA.R1.fastq.gz&#34;],
+    &#34;sampleB&#34;: [&#34;sampleB.R1.fastq.gz&#34;],
+    &#34;sampleC&#34;: [&#34;sampleC.R1.fastq.gz&#34;],
+    &#34;sampleD&#34;: [&#34;sampleD.R1.fastq.gz&#34;]
 }
 
 PairedEnd_SinlgeLane.txt
 {
     &#34;sampleA&#34;: [
-        [sampleA.R1.fastq.gz, sampleA.R2.fastq.gz]
+        [&#34;sampleA.R1.fastq.gz&#34;, &#34;sampleA.R2.fastq.gz&#34;]
         ],
     &#34;sampleB&#34;: [
-        [sampleB.R1.fastq.gz, sampleB.R2.fastq.gz]
+        [&#34;sampleB.R1.fastq.gz&#34;, &#34;sampleB.R2.fastq.gz&#34;]
         ],
     &#34;sampleC&#34;: [
-        [sampleC.R1.fastq.gz, sampleC.R2.fastq.gz]
+        [&#34;sampleC.R1.fastq.gz&#34;, &#34;sampleC.R2.fastq.gz&#34;]
         ],
     &#34;sampleD&#34;: [
-        [sampleD.R1.fastq.gz, sampleD.R2.fastq.gz]
+        [&#34;sampleD.R1.fastq.gz&#34;, &#34;sampleD.R2.fastq.gz&#34;]
         ]
 }
 
 SingleEnd_MultiLane.txt
 {
-    &#34;sampleA&#34;: [&#34;sampleA.L1.R1.fastq.gz&#34;, &#34;sampleA.L2.R1.fastq.gz&#34;, &#34;sampleA.L3.R1.fastq.gz],
-    &#34;sampleB&#34;: [&#34;sampleB.L1.R1.fastq.gz&#34;, &#34;sampleB.L2.R1.fastq.gz&#34;, &#34;sampleB.L3.R1.fastq.gz],
-    &#34;sampleC&#34;: [&#34;sampleC.L1.R1.fastq.gz&#34;, &#34;sampleC.L2.R1.fastq.gz&#34;, &#34;sampleC.L3.R1.fastq.gz],
-    &#34;sampleD&#34;: [&#34;sampleC.L1.R1.fastq.gz&#34;, &#34;sampleD.L2.R1.fastq.gz&#34;, &#34;sampleD.L3.R1.fastq.gz]
+    &#34;sampleA&#34;: [&#34;sampleA.L1.R1.fastq.gz&#34;, &#34;sampleA.L2.R1.fastq.gz&#34;, &#34;sampleA.L3.R1.fastq.gz&#34;],
+    &#34;sampleB&#34;: [&#34;sampleB.L1.R1.fastq.gz&#34;, &#34;sampleB.L2.R1.fastq.gz&#34;, &#34;sampleB.L3.R1.fastq.gz&#34;],
+    &#34;sampleC&#34;: [&#34;sampleC.L1.R1.fastq.gz&#34;, &#34;sampleC.L2.R1.fastq.gz&#34;, &#34;sampleC.L3.R1.fastq.gz&#34;],
+    &#34;sampleD&#34;: [&#34;sampleC.L1.R1.fastq.gz&#34;, &#34;sampleD.L2.R1.fastq.gz&#34;, &#34;sampleD.L3.R1.fastq.gz&#34;]
 }
 
 JointAnalysisGroups_SameNormal_MultipleTumors.txt
 {
-    &#34;group1&#34;: [&#34;sampleA&#34;, &#34;sampleB&#34;, &#34;sampleC],
-    &#34;group2&#34;: [&#34;sampleA&#34;, &#34;sampleD]
+    &#34;group1&#34;: [&#34;sampleA&#34;, &#34;sampleB&#34;, &#34;sampleC&#34;],
+    &#34;group2&#34;: [&#34;sampleA&#34;, &#34;sampleD&#34;]
 }
 
 JointAnalysisGroups.txt
 {
-    &#34;group1&#34;: [&#34;sampleA&#34;, &#34;sampleB],
-    &#34;group2&#34;: [&#34;sampleC&#34;, &#34;sampleD]
+    &#34;group1&#34;: [&#34;sampleA&#34;, &#34;sampleB&#34;],
+    &#34;group2&#34;: [&#34;sampleC&#34;, &#34;sampleD&#34;]
 }
 
 </pre>
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
 
@@ -13316,177 +13303,6 @@ JointAnalysisGroups.txt
 <h2 id="Pre-Function-Exploration:">Pre-Function Exploration:<a class="anchor-link" href="#Pre-Function-Exploration:">&#182;</a></h2>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">paired_list_to_str</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;[&#39;</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">str_list</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span>
-        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">],</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">str_list</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">str_list</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;]</span><span class="se">\n</span><span class="s1">&#39;</span>
-
-<span class="k">def</span> <span class="nf">single_end_list_to_str</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;[&#39;</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">str_list</span><span class="p">)):</span>
-        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39; </span><span class="si">%s</span><span class="s1">,&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">str_list</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;]</span><span class="se">\n</span><span class="s1">&#39;</span>
-    <span class="k">return</span> <span class="n">s</span>
-
-<span class="k">def</span> <span class="nf">group_list_to_str</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;[&#39;</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">str_list</span><span class="p">)):</span>
-        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39; </span><span class="si">%s</span><span class="s1">,&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">str_list</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;]</span><span class="se">\n</span><span class="s1">&#39;</span>
-    <span class="k">return</span> <span class="n">s</span>
-
-<span class="c1"># group2=&quot;sampleC sampleD&quot; </span>
-
-<span class="n">paired_end_str</span> <span class="o">=</span> <span class="s1">&#39;PairedEnd&#39;</span>
-<span class="n">single_end_str</span> <span class="o">=</span> <span class="s1">&#39;SingleEnd&#39;</span>
-<span class="n">paired_end</span> <span class="o">=</span> <span class="kc">False</span>
-
-<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
-    <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;.txt&#39;</span><span class="p">:</span>
-            
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-            
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="s1">&#39;&quot;&#39;</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="n">paired_end_str</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">is </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">paired_end_str</span><span class="p">)</span> <span class="p">)</span>
-                <span class="n">paired_end</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">is </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">single_end_str</span><span class="p">)</span> <span class="p">)</span>
-                <span class="n">paired_end</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">f</span> <span class="p">)</span>
-            <span class="n">paired_end</span> <span class="o">=</span> <span class="kc">False</span>
-            
-        <span class="n">line_number</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-            <span class="n">l</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="n">variable_name_string</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">variable_name_string</span><span class="p">:</span>
-                <span class="n">variable_name_string</span> <span class="o">=</span> <span class="n">variable_name_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;line: </span><span class="si">%3i</span><span class="se">\t</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">line_number</span><span class="p">,</span> <span class="n">variable_name_string</span><span class="p">))</span>
-            <span class="n">line_number</span> <span class="o">+=</span> <span class="mi">1</span>
-
-            <span class="k">if</span> <span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
-                <span class="n">l_tab_list</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">paired_end</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_tab_list</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">paired_list_to_str</span><span class="p">(</span><span class="n">l_tab_list</span><span class="p">))</span>
-                <span class="k">elif</span> <span class="n">paired_end</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">single_end_list_to_str</span><span class="p">(</span><span class="n">l_tab_list</span><span class="p">))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">single_end_list_to_str</span><span class="p">(</span><span class="n">l_tab_list</span><span class="p">))</span>
-
-            <span class="k">elif</span> <span class="s1">&#39;&quot;&#39;</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
-                <span class="n">group_spc_list</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">group_spc_list</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
- PairedEnd_MultiLane.txt 	is PairedEnd
-line:   0	sampleA
-[[sampleA.L1.R1.fastq.gz, sampleA.L1.R2.fastq.gz],
-[sampleA.L1.R2.fastq.gz, sampleA.L2.R1.fastq.gz],
-[sampleA.L2.R1.fastq.gz, sampleA.L2.R2.fastq.gz]]
-
-line:   1	sampleB
-[[sampleB.L1.R1.fastq.gz, sampleB.L1.R2.fastq.gz],
-[sampleB.L1.R2.fastq.gz, sampleB.L2.R1.fastq.gz],
-[sampleB.L2.R1.fastq.gz, sampleB.L2.R2.fastq.gz]]
-
-line:   2	sampleC
-[[sampleC.L1.R1.fastq.gz, sampleC.L1.R2.fastq.gz],
-[sampleC.L1.R2.fastq.gz, sampleC.L2.R1.fastq.gz],
-[sampleC.L2.R1.fastq.gz, sampleC.L2.R2.fastq.gz]]
-
-line:   3	sampleD
-[[sampleD.L1.R1.fastq.gz, sampleD.L1.R2.fastq.gz],
-[sampleD.L1.R2.fastq.gz, sampleD.L2.R1.fastq.gz],
-[sampleD.L2.R1.fastq.gz, sampleD.L2.R2.fastq.gz]]
-
-
- SingleEnd_SingleLane.txt 	is SingleEnd
-line:   0	sampleA
-[ sampleA.R1.fastq.g]
-
-line:   1	sampleB
-[ sampleB.R1.fastq.g]
-
-line:   2	sampleC
-[ sampleC.R1.fastq.g]
-
-line:   3	sampleD
-[ sampleD.R1.fastq.g]
-
-
- PairedEnd_SinlgeLane.txt 	is PairedEnd
-line:   0	sampleA
-[[sampleA.R1.fastq.gz, sampleA.R2.fastq.gz]]
-
-line:   1	sampleB
-[[sampleB.R1.fastq.gz, sampleB.R2.fastq.gz]]
-
-line:   2	sampleC
-[[sampleC.R1.fastq.gz, sampleC.R2.fastq.gz]]
-
-line:   3	sampleD
-[[sampleD.R1.fastq.gz, sampleD.R2.fastq.gz]]
-
-
- SingleEnd_MultiLane.txt 	is SingleEnd
-line:   0	sampleA
-[ sampleA.L1.R1.fastq.gz, sampleA.L2.R1.fastq.gz, sampleA.L3.R1.fastq.g]
-
-line:   1	sampleB
-[ sampleB.L1.R1.fastq.gz, sampleB.L2.R1.fastq.gz, sampleB.L3.R1.fastq.g]
-
-line:   2	sampleC
-[ sampleC.L1.R1.fastq.gz, sampleC.L2.R1.fastq.gz, sampleC.L3.R1.fastq.g]
-
-line:   3	sampleD
-[ sampleC.L1.R1.fastq.gz, sampleD.L2.R1.fastq.gz, sampleD.L3.R1.fastq.g]
-
-
- JointAnalysisGroups_SameNormal_MultipleTumors.txt
-line:   0	group1
-[&#39;sampleA&#39;, &#39;sampleB&#39;, &#39;sampleC&#39;]
-line:   1	group2
-[&#39;sampleA&#39;, &#39;sampleD&#39;]
-
- JointAnalysisGroups.txt
-line:   0	group1
-[&#39;sampleA&#39;, &#39;sampleB&#39;]
-line:   1	group2
-[&#39;sampleC&#39;, &#39;sampleD&#39;]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13608,19 +13424,6 @@ group2=&#34;sampleC sampleD&#34;
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
 
