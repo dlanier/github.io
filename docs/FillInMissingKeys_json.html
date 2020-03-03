@@ -13107,12 +13107,70 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Two-new-functions:">Two new functions:<a class="anchor-link" href="#Two-new-functions:">&#182;</a></h2><p><a href="#ccdn2dkv">CamelCaseDottyNames.json file into config_key: value</a> <br>
-<a href="#fmkfcd">fill missing_keys.json from config file zoo directory</a> <br></p>
+<h2 id="Two-new-functions:">Two new functions:<a class="anchor-link" href="#Two-new-functions:">&#182;</a></h2><p><a href="#ccdn2dkv"><strong>json_keys_dict = get_json_keys_config_types_dict( json_template_dict )</strong></a> <br></p>
+<p>Get the missing keys as a template usable by the next function with a <strong>config Zoo directory</strong></p>
+<div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    more specific version of get_json_keys_config_dict(json_dict) in config_json_parser.py</span>
+<span class="sd">        handles filled-in or config dicts with arrays</span>
+<span class="sd">        automatically extends single-key names to multi-key name for duplicates</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+<p><a href="#fmkfcd"><strong>filled_json, missing_keys = fill_missing_keys_from_configs_dir( missing_keys_dict, config_files_dir )</strong></a> <br></p>
+<p>Fill missing keys .json file from a <strong>config Zoo directory</strong></p>
+<div class="highlight"><pre><span></span><span class="n">filled_json</span><span class="p">,</span> <span class="n">missing_keys</span> <span class="o">=</span> <span class="n">fill_missing_keys_from_configs_dir</span><span class="p">(</span><span class="n">missing_keys</span><span class="p">,</span> <span class="n">any_configs_dir</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">with 31 missing full-length names as 18 unique names</span>
+<span class="sd">Looking for:</span>
+<span class="sd">                       PlatformUnitArray: Array[Array[String]]</span>
+<span class="sd">             RealignBqsr.SampleNameArray: Array[String]</span>
+<span class="sd">  CallMultisampleHaploWF.SampleNameArray: Array[File]</span>
+<span class="sd">                                MemLimit: String</span>
+<span class="sd">                     VariantCallerOption: String</span>
+<span class="sd">                          VCFSourceField: String</span>
+<span class="sd">                        TnhFilterOptions: String</span>
+<span class="sd">                   VqsrIndelAnnotateText: String</span>
+<span class="sd">        VqsrIndelApplyVarCalExtraOptions: String</span>
+<span class="sd">             VqsrIndelVarCalExtraOptions: String</span>
+<span class="sd">                     VqsrSnpAnnotateText: String</span>
+<span class="sd">          VqsrSnpApplyVarCalExtraOptions: String</span>
+<span class="sd">               VqsrSnpVarCalExtraOptions: String</span>
+<span class="sd">                          BqsrBibdScores: Boolean</span>
+<span class="sd">                            BqsrOqScores: Boolean</span>
+<span class="sd">                           RunAlignBlock: Boolean</span>
+<span class="sd">                         RunRealignBlock: Boolean</span>
+<span class="sd">                   RunVariantCallerBlock: Boolean</span>
+
+
+<span class="sd">Try filling with Directory: /Users/mojo/zzIForge/ConfigAll/</span>
+
+<span class="sd">Result: 15 filled in    3 keys Missing --</span>
+<span class="sd">                           RunAlignBlock: Boolean</span>
+<span class="sd">                         RunRealignBlock: Boolean</span>
+<span class="sd">                   RunVariantCallerBlock: Boolean</span>
+
+<span class="sd">Filled In from missing keys directory: /Users/mojo/zzIForge/ConfigAll/  --</span>
+<span class="sd">                       PlatformUnitArray: [[&#39;FLOWCELL_BARCODE.LANE1.SAMPLE1_BARCODE&#39;], [&#39;FLOWCELL_BARCODE.LANE1.SAMPLE2_BARCODE&#39;, &#39;FLOWCELL_BARCODE.LANE2.SAMPLE2_BARCODE&#39;]]</span>
+<span class="sd">             RealignBqsr.SampleNameArray: [&#39;Sample1&#39;, &#39;Sample2&#39;]</span>
+<span class="sd">  CallMultisampleHaploWF.SampleNameArray: [&#39;Sample1&#39;, &#39;Sample2&#39;]</span>
+<span class="sd">                                MemLimit: 50G</span>
+<span class="sd">                     VariantCallerOption: haplotyper</span>
+<span class="sd">                          VCFSourceField: Sentieon</span>
+<span class="sd">                        TnhFilterOptions: &quot;&quot;</span>
+<span class="sd">                   VqsrIndelAnnotateText: &#39;--annotation SOR --annotation MQ --annotation MQRankSum --annotation ReadPosRankSum&#39;</span>
+<span class="sd">        VqsrIndelApplyVarCalExtraOptions: &#39;--sensitivity 0.8&#39;</span>
+<span class="sd">             VqsrIndelVarCalExtraOptions: &#39;--max_iter 175&#39;</span>
+<span class="sd">                     VqsrSnpAnnotateText: &#39;--annotation SOR --annotation MQ --annotation MQRankSum --annotation ReadPosRankSum&#39;</span>
+<span class="sd">          VqsrSnpApplyVarCalExtraOptions: &#39;--sensitivity 0.9867&#39;</span>
+<span class="sd">               VqsrSnpVarCalExtraOptions: &#39;--max_iter 200&#39;</span>
+<span class="sd">                          BqsrBibdScores: false</span>
+<span class="sd">                            BqsrOqScores: true</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
 <p><a href="#view_files">view files</a> <br>
 <a href="#run_workflow">run workflow .py</a> <br></p>
 <hr>
-<h4 id="Tink:-Run-Time-Directories--">Tink: Run Time Directories--<a class="anchor-link" href="#Tink:-Run-Time-Directories--">&#182;</a></h4><ul>
+<h4 id="Resume-Workflow-Automation-Think:-Run-Time-Directories---">Resume Workflow Automation Think: Run Time Directories --<a class="anchor-link" href="#Resume-Workflow-Automation-Think:-Run-Time-Directories---">&#182;</a></h4><ul>
 <li>run_directory:<ul>
 <li>where the code will run</li>
 <li>the run parameters files are found</li>
@@ -13134,7 +13192,7 @@ div#notebook {
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cwd_00</span> <span class="o">=</span> <span class="s1">&#39;/Users/mojo/git_clone/ncsa/MayomicsVC/testing/python_script_testing/notebookPyBroadie&#39;</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook originated in:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">cwd_00</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;notebook originated in:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">cwd_00</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;notebook running in:&#39;</span><span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
 </pre></div>
 
@@ -13153,7 +13211,9 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>notebook originated in:
- /Users/mojo/git_clone/ncsa/MayomicsVC/testing/python_script_testing/notebookPyBroadie
+ /Users/mojo/git_clone/ncsa/MayomicsVC/testing/python_script_testing/notebookPyBroadie 
+
+ notebook running in:
 </pre>
 </div>
 </div>
@@ -13186,10 +13246,15 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_json_keys_config_types_dict</span><span class="p">(</span><span class="n">json_dict</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    more specific version of get_json_keys_config_dict(json_dict) in config_json_parser.py</span>
+<span class="sd">        handles filled-in or config dicts with arrays</span>
+<span class="sd">        automatically extends single-key names to multi-key name for duplicates</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">get_json_keys_config_types_dict</span><span class="p">(</span><span class="n">json_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Usage: json_keys_dict = get_json_keys_config_types_dict( json_template_dict )</span>
 <span class="sd">    Convert missing keys dict into a minimum set of keys-types to fill from the config files zoo.</span>
 <span class="sd">    </span>
@@ -13221,28 +13286,40 @@ div#notebook {
 <span class="sd">                                                                  CenterName: String</span>
 <span class="sd"> </span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># temporary - first pass dict of all short-name indexed full-name: value pairs</span>
     <span class="n">keys_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="c1"># return dict - second pass dictionary; handles (list, set, dict) variable values &amp; dupelicate names</span>
     <span class="n">shortest_keys_type_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     
+    <span class="c1"># task name dictionary of list of dictionaries with multiple full-names to group those with same values</span>
+    <span class="c1"># task-name-key: [ {variable_1_name: variable_1_value}, {variable_2_name: variable_2_value}, ... ]</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">json_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">jd_key</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        
         <span class="n">keys_dict</span><span class="p">[</span><span class="n">jd_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;variable_name&#39;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s1">&#39;variable_value&#39;</span><span class="p">:</span> <span class="n">v</span><span class="p">})</span>
 
+    <span class="c1"># group same-value-types into minimum size key-names (see example in docstring header)</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">keys_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># put those that are NOT array types into a variables dict</span>
         <span class="n">vars_dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">v_item</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v_item</span><span class="p">[</span><span class="s1">&#39;variable_value&#39;</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">set</span><span class="p">,</span> <span class="nb">dict</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">v_item</span><span class="p">[</span><span class="s1">&#39;variable_value&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-                <span class="c1">#if not isinstance(v_item[&#39;variable_value&#39;], (list, set, dict)):</span>
                 <span class="n">vars_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span> <span class="p">{</span><span class="n">v_item</span><span class="p">[</span><span class="s1">&#39;variable_value&#39;</span><span class="p">]:</span>  <span class="n">v_item</span><span class="p">[</span><span class="s1">&#39;variable_name&#39;</span><span class="p">]})</span>
                 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vars_dict</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># if the veriables-value dict is not unique the key must be extended </span>
             <span class="n">key_depth</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vars_dict</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">vars_value</span><span class="p">,</span> <span class="n">vars_name</span> <span class="ow">in</span> <span class="n">vars_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">long_key_n</span> <span class="o">=</span> <span class="n">vars_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="n">key_depth</span><span class="p">:]</span>
+                <span class="c1"># construct a guaranteed long enough key</span>
+                <span class="n">long_key_list</span> <span class="o">=</span> <span class="n">vars_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">long_key_list</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">key_depth</span><span class="p">:</span>
+                    <span class="n">long_key_n</span> <span class="o">=</span> <span class="n">long_key_list</span><span class="p">[</span><span class="o">-</span><span class="n">key_depth</span><span class="p">:]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">long_key_n</span> <span class="o">=</span> <span class="n">long_key_list</span>
+                    
                 <span class="n">shortest_keys_type_dict</span><span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">long_key_n</span><span class="p">)]</span> <span class="o">=</span> <span class="n">vars_value</span>
                 
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># put those that ARE array types into the short_keys: variables dict</span>
             <span class="n">shortest_keys_type_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v_item</span><span class="p">[</span><span class="s1">&#39;variable_value&#39;</span><span class="p">]</span>
             
     <span class="k">return</span> <span class="n">shortest_keys_type_dict</span>
@@ -13251,7 +13328,9 @@ div#notebook {
 <span class="n">template_file</span> <span class="o">=</span> <span class="s1">&#39;MultiSampleMasterWorkflow.template.json&#39;</span>
 <span class="n">template_full_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">template_file_dir</span><span class="p">,</span> <span class="n">template_file</span><span class="p">)</span>
 
-<span class="sd">&quot;&quot;&quot; dev proof test I &quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot; dev proof test I </span>
+<span class="sd">    Womtool template reduction to minimum unique names </span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="n">json_dict</span> <span class="o">=</span> <span class="n">cojpar</span><span class="o">.</span><span class="n">read_json_file</span><span class="p">(</span><span class="n">template_full_file</span><span class="p">)</span>
 <span class="n">json_template_types_dict</span> <span class="o">=</span> <span class="n">get_json_keys_config_types_dict</span><span class="p">(</span><span class="n">json_dict</span><span class="p">)</span>
 
@@ -13360,10 +13439,12 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot; dev proof test II &quot;&quot;&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot; dev proof test II </span>
+<span class="sd">    missing keys file to unique minimum template</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="n">test_output_dir</span> <span class="o">=</span> <span class="s1">&#39;/Users/mojo/git_clone/MayomicsVC_run_dir/JsonsTest/&#39;</span>
 <span class="n">missing_keys_file</span> <span class="o">=</span> <span class="s1">&#39;missing_keys_dict.json&#39;</span>
 <span class="n">misskeys_full_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_output_dir</span><span class="p">,</span> <span class="n">missing_keys_file</span><span class="p">)</span>
@@ -13372,7 +13453,7 @@ div#notebook {
 <span class="n">missing_keys_json_template_types_dict</span> <span class="o">=</span> <span class="n">get_json_keys_config_types_dict</span><span class="p">(</span><span class="n">missing_keys_json_dict</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Get the short name and type list from config_json_parser.py created missing_keys.json file:&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%4i</span><span class="s1"> CamelCaseDottyNames </span><span class="si">%4i</span><span class="s1"> VarName: var_type</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">missing_keys_json_dict</span><span class="p">),</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%4i</span><span class="s1"> CamelCaseDottyNames to </span><span class="si">%4i</span><span class="s1"> VarName: var_type</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">missing_keys_json_dict</span><span class="p">),</span>
                                                          <span class="nb">len</span><span class="p">(</span><span class="n">missing_keys_json_template_types_dict</span><span class="p">)))</span>
 
 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">missing_keys_json_template_types_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -13394,7 +13475,7 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Get the short name and type list from config_json_parser.py created missing_keys.json file:
-  31 CamelCaseDottyNames   18 VarName: var_type
+  31 CamelCaseDottyNames to   18 VarName: var_type
 
                        PlatformUnitArray: Array[Array[String]]
              RealignBqsr.SampleNameArray: Array[String]
@@ -13433,64 +13514,89 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Fools Errand: the entire directory is void of the required (and missing) keys</span>
+<span class="sd">        The entire directory is may not have some of the required missing keys</span>
 <span class="sd">        </span>
 <span class="sd">        Note: may require refinement for case with config.txt file extra options string or empty strings</span>
-<span class="sd">        </span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="k">def</span> <span class="nf">fill_missing_keys_from_configs_dir</span><span class="p">(</span><span class="n">missing_keys_dict</span><span class="p">,</span> <span class="n">config_files_dir</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;filled_json, missing_keys = fill_missing_keys_from_configs_dir(missing_keys_dict, config_files_dir)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># returns two dictionarys: found &amp; filled in and failed to find</span>
     <span class="n">filled_json</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">missing_keys</span> <span class="o">=</span> <span class="p">{}</span>
     
+    <span class="c1"># Crash Out if the Directory is not found </span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">config_files_dir</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Directory not found:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">config_files_dir</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">filled_json</span><span class="p">,</span> <span class="n">missing_keys_dict</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Looking for:&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">missing_keys_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%40s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;In Directory:</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">config_files_dir</span><span class="p">))</span>
     
+    <span class="c1"># for every subdirectory and file,...</span>
     <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">d_list</span><span class="p">,</span> <span class="n">f_list</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">config_files_dir</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">f_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># for every file in this sub-direcory</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">f_list</span><span class="p">:</span>
                 <span class="n">full_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
                 <span class="n">JSON_FILE</span> <span class="o">=</span> <span class="kc">False</span>
                 
+                <span class="c1"># read the file into a dictionary</span>
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.json&#39;</span><span class="p">:</span>
                     <span class="n">JSON_FILE</span> <span class="o">=</span> <span class="kc">True</span>                    
                     <span class="n">maybe_keys_dict</span> <span class="o">=</span> <span class="n">cojpar</span><span class="o">.</span><span class="n">read_json_file</span><span class="p">(</span><span class="n">full_file</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">maybe_keys_dict</span> <span class="o">=</span> <span class="n">cojpar</span><span class="o">.</span><span class="n">get_config_text_as_dict</span><span class="p">(</span><span class="n">full_file</span><span class="p">)</span>
                     
+                <span class="c1"># if there was anything in it,</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">maybe_keys_dict</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># check the missing keys dictionary - misses the long-name keys</span>
                     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">missing_keys_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                            <span class="n">this_key</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="n">this_key</span> <span class="o">=</span> <span class="n">k</span>
-                            
-                        <span class="k">if</span> <span class="n">this_key</span> <span class="ow">in</span> <span class="n">maybe_keys_dict</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="n">JSON_FILE</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                                <span class="n">filled_json</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">maybe_keys_dict</span><span class="p">[</span><span class="n">this_key</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">filled_json</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="n">this_key</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                             <span class="k">else</span><span class="p">:</span>
-                                <span class="n">this_value</span> <span class="o">=</span> <span class="n">maybe_keys_dict</span><span class="p">[</span><span class="n">this_key</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
-                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">this_value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                                    <span class="n">this_value</span> <span class="o">=</span> <span class="s1">&#39;&quot;&quot;&#39;</span>
-                                <span class="n">filled_json</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">this_value</span>
+                                <span class="n">this_key</span> <span class="o">=</span> <span class="n">k</span>
+
+                            <span class="c1"># if the key is found in the opened file fill it in</span>
+                            <span class="k">if</span> <span class="n">this_key</span> <span class="ow">in</span> <span class="n">maybe_keys_dict</span><span class="p">:</span>
+
+                                <span class="k">if</span> <span class="n">JSON_FILE</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                                    <span class="n">filled_json</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">maybe_keys_dict</span><span class="p">[</span><span class="n">this_key</span><span class="p">]</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="c1"># strip the quotation marks from the config.txt files</span>
+                                    <span class="n">this_value</span> <span class="o">=</span> <span class="n">maybe_keys_dict</span><span class="p">[</span><span class="n">this_key</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">this_value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                        <span class="c1"># cover the empty string case</span>
+                                        <span class="n">this_value</span> <span class="o">=</span> <span class="s1">&#39;&quot;&quot;&#39;</span>
+
+                                    <span class="n">filled_json</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">this_value</span>
+                                    
+                            <span class="k">elif</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">maybe_keys_dict</span><span class="p">:</span>
+                                <span class="c1"># development print-test assumption that dottie-names DNE in config files</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\t\t</span><span class="s1">missed </span><span class="si">%s</span><span class="s1"> in </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">full_file</span><span class="p">))</span>
+                                
+                                <span class="k">if</span> <span class="n">JSON_FILE</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                                    <span class="n">filled_json</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">maybe_keys_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="c1"># strip the quotation marks from the config.txt files</span>
+                                    <span class="n">this_value</span> <span class="o">=</span> <span class="n">maybe_keys_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">this_value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                        <span class="c1"># cover the empty string case</span>
+                                        <span class="n">this_value</span> <span class="o">=</span> <span class="s1">&#39;&quot;&quot;&#39;</span>
+
+                                    <span class="n">filled_json</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">this_value</span>
+
 
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filled_json</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_keys_dict</span><span class="p">):</span>
+                    <span class="c1"># -- finished exit os.walk subdirectories</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Halellujah!&#39;</span><span class="p">)</span>
                     <span class="k">break</span>
     
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filled_json</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># check for unfulfilled keys</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">missing_keys_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">filled_json</span><span class="p">:</span>
                 <span class="n">missing_keys</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
@@ -13508,17 +13614,20 @@ div#notebook {
 <span class="n">missing_keys_json_dict</span> <span class="o">=</span> <span class="n">cojpar</span><span class="o">.</span><span class="n">read_json_file</span><span class="p">(</span><span class="n">misskeys_full_file</span><span class="p">)</span>
 <span class="n">missing_keys</span> <span class="o">=</span> <span class="n">get_json_keys_config_types_dict</span><span class="p">(</span><span class="n">missing_keys_json_dict</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">missing_keys_json_dict</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_keys</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="c1"># for k, v in missing_keys.items():</span>
-<span class="c1">#     print(&#39;%40s: %s&#39;%(k,v))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;with </span><span class="si">%i</span><span class="s1"> missing full-length names as </span><span class="si">%i</span><span class="s1"> unique names&#39;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">missing_keys_json_dict</span><span class="p">),</span> 
+                                                           <span class="nb">len</span><span class="p">(</span><span class="n">missing_keys</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Looking for:&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">missing_keys</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%40s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Try filling with Directory:</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">any_configs_dir</span><span class="p">))</span>
 
 <span class="n">filled_json</span><span class="p">,</span> <span class="n">missing_keys</span> <span class="o">=</span> <span class="n">fill_missing_keys_from_configs_dir</span><span class="p">(</span><span class="n">missing_keys</span><span class="p">,</span> <span class="n">any_configs_dir</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\t</span><span class="si">%i</span><span class="s1"> filled in&#39;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filled_json</span><span class="p">)),</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="si">%i</span><span class="s1"> keys Missing:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">missing_keys</span><span class="p">))</span> <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Result: </span><span class="si">%i</span><span class="s1"> filled in&#39;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">filled_json</span><span class="p">)),</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="si">%i</span><span class="s1"> keys Missing --&#39;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">missing_keys</span><span class="p">))</span> <span class="p">)</span>
 
 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">missing_keys</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%40s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
     
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n\t</span><span class="s1">Filled In from missing keys:&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Filled In from missing keys directory:&#39;</span><span class="p">,</span> <span class="n">any_configs_dir</span><span class="p">,</span> <span class="s1">&#39; --</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">filled_json</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%40s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
 </pre></div>
@@ -13537,8 +13646,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>31 18 
-
+<pre>with 31 missing full-length names as 18 unique names
 Looking for:
                        PlatformUnitArray: Array[Array[String]]
              RealignBqsr.SampleNameArray: Array[String]
@@ -13558,25 +13666,25 @@ Looking for:
                            RunAlignBlock: Boolean
                          RunRealignBlock: Boolean
                    RunVariantCallerBlock: Boolean
-In Directory:
+
+Try filling with Directory:
 /Users/mojo/zzIForge/ConfigAll/
 
 
-	15 filled in 	3 keys Missing:
-
+Result: 15 filled in 	3 keys Missing --
                            RunAlignBlock: Boolean
                          RunRealignBlock: Boolean
                    RunVariantCallerBlock: Boolean
 
+Filled In from missing keys directory: /Users/mojo/zzIForge/ConfigAll/  --
 
-	Filled In from missing keys:
                        PlatformUnitArray: [[&#39;FLOWCELL_BARCODE.LANE1.SAMPLE1_BARCODE&#39;], [&#39;FLOWCELL_BARCODE.LANE1.SAMPLE2_BARCODE&#39;, &#39;FLOWCELL_BARCODE.LANE2.SAMPLE2_BARCODE&#39;]]
              RealignBqsr.SampleNameArray: [&#39;Sample1&#39;, &#39;Sample2&#39;]
   CallMultisampleHaploWF.SampleNameArray: [&#39;Sample1&#39;, &#39;Sample2&#39;]
                                 MemLimit: 50G
                      VariantCallerOption: haplotyper
-                          VCFSourceField: Sentieon
-                        TnhFilterOptions: &#34;&#34;
+                          VCFSourceField: sentieon
+                        TnhFilterOptions: &#39;&#39;
                    VqsrIndelAnnotateText: &#39;--annotation SOR --annotation MQ --annotation MQRankSum --annotation ReadPosRankSum&#39;
         VqsrIndelApplyVarCalExtraOptions: &#39;--sensitivity 0.8&#39;
              VqsrIndelVarCalExtraOptions: &#39;--max_iter 175&#39;
@@ -13584,7 +13692,7 @@ In Directory:
           VqsrSnpApplyVarCalExtraOptions: &#39;--sensitivity 0.9867&#39;
                VqsrSnpVarCalExtraOptions: &#39;--max_iter 200&#39;
                           BqsrBibdScores: false
-                            BqsrOqScores: true
+                            BqsrOqScores: false
 </pre>
 </div>
 </div>
@@ -13595,13 +13703,79 @@ In Directory:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">add_missing_booleans</span><span class="p">(</span><span class="n">filled_json</span><span class="p">,</span> <span class="n">missing_keys</span><span class="p">,</span> <span class="n">filler_bool</span><span class="o">=</span><span class="s1">&#39;false&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; filled_json, still_missing_keys = add_fill_missing_booleans(filled_json, missing_keys, default_bool)</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        filled_json:            filled in json to append</span>
+<span class="sd">        missing_keys:           missing keys dict</span>
+<span class="sd">        filler_bool:            string: false, False, true, True - for config value field</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        filled_json:            json file to appended with boolean missing keys</span>
+<span class="sd">        still_missing_keys:     those that were not of python type &quot;Boolean&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">still_missing_keys</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">missing_keys</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="s1">&#39;Boolean&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">filled_json</span><span class="p">:</span>
+                <span class="n">filled_json</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">filler_bool</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">still_missing_keys</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            
+    <span class="k">return</span> <span class="n">filled_json</span><span class="p">,</span> <span class="n">still_missing_keys</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function inputs rely on cells above</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">filled_in_json</span><span class="p">,</span> <span class="n">still_missing_keys</span> <span class="o">=</span> <span class="n">add_missing_booleans</span><span class="p">(</span><span class="n">filled_json</span><span class="p">,</span> <span class="n">missing_keys</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">still_missing_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Fooie!&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">filled_in_json</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%40s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                       PlatformUnitArray: [[&#39;FLOWCELL_BARCODE.LANE1.SAMPLE1_BARCODE&#39;], [&#39;FLOWCELL_BARCODE.LANE1.SAMPLE2_BARCODE&#39;, &#39;FLOWCELL_BARCODE.LANE2.SAMPLE2_BARCODE&#39;]]
+             RealignBqsr.SampleNameArray: [&#39;Sample1&#39;, &#39;Sample2&#39;]
+  CallMultisampleHaploWF.SampleNameArray: [&#39;Sample1&#39;, &#39;Sample2&#39;]
+                                MemLimit: 50G
+                     VariantCallerOption: haplotyper
+                          VCFSourceField: sentieon
+                        TnhFilterOptions: &#39;&#39;
+                   VqsrIndelAnnotateText: &#39;--annotation SOR --annotation MQ --annotation MQRankSum --annotation ReadPosRankSum&#39;
+        VqsrIndelApplyVarCalExtraOptions: &#39;--sensitivity 0.8&#39;
+             VqsrIndelVarCalExtraOptions: &#39;--max_iter 175&#39;
+                     VqsrSnpAnnotateText: &#39;--annotation SOR --annotation MQ --annotation MQRankSum --annotation ReadPosRankSum&#39;
+          VqsrSnpApplyVarCalExtraOptions: &#39;--sensitivity 0.9867&#39;
+               VqsrSnpVarCalExtraOptions: &#39;--max_iter 200&#39;
+                          BqsrBibdScores: false
+                            BqsrOqScores: false
+                           RunAlignBlock: true
+                         RunRealignBlock: true
+                   RunVariantCallerBlock: true
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -13618,7 +13792,7 @@ In Directory:
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot; Development notes - view typical files with function #1 above: get_json_keys_config_types_dict</span>
@@ -13649,89 +13823,10 @@ In Directory:
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>/Users/mojo/zzIForge/ConfigAll/multisample_somatic.json 6 6 
-
-                        SampleNameNormal: normal
-                        NormalInputReads: [[&#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/normal_fastqs/TCRBOA6-N-WGS.lane1.read1.fastq.gz&#39;, &#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/normal_fastqs/TCRBOA6-N-WGS.lane1.read2.fastq.gz&#39;], [&#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/normal_fastqs/TCRBOA6-N-WGS.lane2.read1.fastq.gz&#39;, &#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/normal_fastqs/TCRBOA6-N-WGS.lane2.read2.fastq.gz&#39;]]
-                    SampleNameTumorArray: [&#39;tumor1&#39;, &#39;tumor2&#39;, &#39;tumor3&#39;, &#39;tumor4&#39;]
-                         TumorInputReads: [[[&#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/tumor_fastqs/TCRBOA6-T-WGS.lane1.read1.fastq.gz&#39;, &#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/tumor_fastqs/TCRBOA6-T-WGS.lane1.read2.fastq.gz&#39;], [&#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/tumor_fastqs/TCRBOA6-T-WGS.lane2.read1.fastq.gz&#39;, &#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/tumor_fastqs/TCRBOA6-T-WGS.lane2.read2.fastq.gz&#39;]], [[&#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/tumor_fastqs/TCRBOA6-T-WGS.lane3.read1.fastq.gz&#39;, &#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/tumor_fastqs/TCRBOA6-T-WGS.lane3.read2.fastq.gz&#39;]], [[&#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/tumor_fastqs/TCRBOA6-T-WGS.lane4.read1.fastq.gz&#39;, &#39;/projects/bioinformatics/DataPacks/human/TXCRB_Whole_Genome/tumor_fastqs/TCRBOA6-T-WGS.lane4.read2.fastq.gz&#39;]]]
-                      PlatformUnitNormal: [&#39;FLOWCELL_BARCODE.LANE1.SAMPLE_BARCODE&#39;, &#39;FLOWCELL_BARCODE.LANE2.SAMPLE_BARCODE&#39;]
-                       PlatformUnitTumor: [[&#39;FLOWCELL_BARCODE.LANE1.SAMPLE1_BARCODE&#39;, &#39;FLOWCELL_BARCODE.LANE2.SAMPLE1_BARCODE&#39;], [&#39;FLOWCELL_BARCODE.LANE1.SAMPLE2_BARCODE&#39;, &#39;FLOWCELL_BARCODE.LANE2.SAMPLE2_BARCODE&#39;], [&#39;FLOWCELL_BARCODE.LANE1.SAMPLE3_BARCODE&#39;, &#39;FLOWCELL_BARCODE.LANE2.SAMPLE3_BARCODE&#39;], [&#39;FLOWCELL_BARCODE.LANE1.SAMPLE4_BARCODE&#39;, &#39;FLOWCELL_BARCODE.LANE2.SAMPLE4_BARCODE&#39;]]
-/Users/mojo/zzIForge/ConfigAll/run_multitumor.txt 53 52 
-
-                              SampleName: &#34;testing_multisample&#34;
-                                Trimming: &#34;true&#34;
-                          MarkDuplicates: &#34;true&#34;
-                            HardMemLimit: &#34;50G&#34;
-                            SoftMemLimit: &#34;25G&#34;
-                              EnvProfile: &#34;/projects/bioinformatics/Mayomics_data/Reference/EnvProfile.file&#34;
-                                 Library: &#34;fakelib&#34;
-                                Platform: &#34;ILLUMINA&#34;
-                              CenterName: &#34;ncsa&#34;
-                               PairedEnd: &#34;true&#34;
-                                     Ref: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Homo_sapiens_assembly38.fasta&#34;
-                                  RefFai: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Homo_sapiens_assembly38.fasta.fai&#34;
-                                  RefAmb: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Homo_sapiens_assembly38.fasta.amb&#34;
-                                  RefAnn: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Homo_sapiens_assembly38.fasta.ann&#34;
-                                  RefBwt: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Homo_sapiens_assembly38.fasta.bwt&#34;
-                                  RefPac: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Homo_sapiens_assembly38.fasta.pac&#34;
-                                   RefSa: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Homo_sapiens_assembly38.fasta.sa&#34;
-                                 RefDict: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Homo_sapiens_assembly38.dict&#34;
-                         SentieonThreads: &#34;40&#34;
-                        ChunkSizeInBases: &#34;10000000&#34;
-                   BWAExtraOptionsString: &#34;&#39;&#39;&#34;
-                               DebugMode: &#34;&#34;
-                          DeliveryFolder: &#34;/projects/bioinformatics/Mayomics_data/Delivery/somatic&#34;
-                       MergeExtraOptions: &#34;&#34;
-                       DedupExtraOptions: &#34;&#34;
-                                 Strelka: &#34;true&#34;
-                                   Manta: &#34;true&#34;
-                                    Bqsr: &#34;true&#34;
-                                  Mutect: &#34;true&#34;
-                   RealignmentKnownSites: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf&#34;
-                     RealignExtraOptions: &#34;&#34;
-                         ProduceRecalBam: &#34;true&#34;
-                          BqsrKnownSites: &#34;/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf,/projects/bioinformatics/DataPacks/human/gatk_bundle_Oct_2017/gatk_bundle_hg38/dbsnp_138.hg38.vcf&#34;
-                        BqsrExtraOptions: &#34;&#34;
-                       ProduceBibdScores: &#34;true&#34;
-                         ProduceOqScores: &#34;true&#34;
-                           MutectThreads: &#34;40&#34;
-                MutectExtraOptionsString: &#34;&#39;&#39;&#34;
-                     MutectJavaMemOption: &#34;&#39;-Xms2G -Xmx24G&#39;&#34;
-                            PanelNormals: &#34;/projects/bioinformatics/jallen17/Inputs/panel_of_normals.vcf&#34;
-                               TumorOnly: &#34;false&#34;
-                         PanelNormalsIdx: &#34;/projects/bioinformatics/jallen17/Inputs/panel_of_normals.vcf.idx&#34;
-                            FastpThreads: &#34;40&#34;
-                 FastpExtraOptionsString: &#34;&#34;
-                            MantaThreads: &#34;40&#34;
-                       MantaExtraOptions: &#34;&#34;
-       CombineVariantsExtraOptionsString: &#34;&#34;
-                  CombineVariantsThreads: &#34;40&#34;
-              PrioritizationOptionString: &#34;strelka,mutect&#34;
-              BcftoolsExtraOptionsString: &#34;&#34;
-               StrelkaExtraOptionsString: &#34;&#34;
-                          StrelkaThreads: &#34;40&#34;
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot; </span>
@@ -13741,64 +13836,6 @@ In Directory:
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt output_prompt">Out[10]:</div>
-
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[&#39;run_haplo.txt&#39;,
- &#39;run_alignment.txt&#39;,
- &#39;Trimming&#39;,
- &#39;run_bamvalid.txt&#39;,
- &#39;run_fastp.txt&#39;,
- &#39;multihaplo.json&#39;,
- &#39;run_multitumor.txt&#39;,
- &#39;run_mergebams.txt&#39;,
- &#39;run_mutect.txt&#39;,
- &#39;tool_info.txt&#39;,
- &#39;simple_multisample_germline.json&#39;,
- &#39;run_testalignment.txt&#39;,
- &#39;multisample_somatic.json&#39;,
- &#39;run_tnh2.txt&#39;,
- &#39;run_manta.txt&#39;,
- &#39;sample_somaticfastqentry.json&#39;,
- &#39;run_trimming.txt&#39;,
- &#39;sample_mergebams.json&#39;,
- &#39;sample_jointgenotyping.json&#39;,
- &#39;run_vqsr.txt&#39;,
- &#39;run_bqsr.txt&#39;,
- &#39;run_combine.txt&#39;,
- &#39;run_gvcftyper.txt&#39;,
- &#39;run_realign.txt&#39;,
- &#39;sample_somaticbamentry.json&#39;,
- &#39;run_breakpoint.txt&#39;,
- &#39;run_somaticfastqentry.txt&#39;,
- &#39;run_strelka.txt&#39;,
- &#39;run_somatictumoronly.txt&#39;,
- &#39;run_parsecoveragetogff.txt&#39;,
- &#39;sample_germline.json&#39;,
- &#39;sample_testalignment.json&#39;,
- &#39;simple_multisample_somatic.json&#39;,
- &#39;run_jointgenotyping.txt&#39;,
- &#39;run_somaticbamentry.txt&#39;,
- &#39;run_dedup.txt&#39;,
- &#39;run_germlinewf.txt&#39;,
- &#39;run_phasing.txt&#39;,
- &#39;sample_somatictumoronly.json&#39;]</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
